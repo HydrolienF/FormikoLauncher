@@ -1,19 +1,12 @@
+package fr.formiko.formikolauncher;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 public class Launcher {
   private Process pr;
   private String version = "2.24.26";
-  //static fct
-  public static void main(String[] args) {
-    Launcher l = new Launcher(args);
-    // if there isn't any folder in .formiko/game
-    // downloadGame(getLastVersion());
-    // else if (can ping github && there is a new version aviable) {
-    // ask for download
-    // }
-    l.launchGame();
-  }
+
   public Launcher(String[] args){
     //TODO launcherArgs(args); (version=, no download of other version, etc)
   }
@@ -42,6 +35,7 @@ public class Launcher {
       cmd[2] = getJarPath();
 
       // create runtime to execute external command
+      // TODO use a ProcessBuilder.
       pr = Runtime.getRuntime().exec(cmd);
       handleControlC();
 
