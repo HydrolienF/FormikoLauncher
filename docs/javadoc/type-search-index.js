@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"fr.formiko.formikolauncher","l":"Launcher"},{"p":"fr.formiko.formikolauncher","l":"Main"}];updateSearchResults();
