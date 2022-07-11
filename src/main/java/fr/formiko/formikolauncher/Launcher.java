@@ -137,13 +137,21 @@ public class Launcher {
   public String getJarPath(){
     return getFolder().getFolderGameJar()+getVersion()+"/Formiko.jar";
   }
+  /**
+  *{@summary Give path to execute java.}<br>
+  *@lastEditedVersion 0.1
+  *@return path to our java version depending of the OS
+  */
   public String getJavaCommand(){
-    // TODO return path to our java version depending of the OS.
     if(Os.getOs().isWindows()){
       File f = new File(System.getenv("ProgramFiles")+"/Formiko/runtime/bin/java.exe");
-      if(f.exists()){
-        return f.toString();
-      }
+      if(f.exists()){return f.toString();}
+    }else if(Os.getOs().isLinux()){
+      File f = new File("/opt/Formiko/runtime/bin/java");
+      if(f.exists()){return f.toString();}
+    }else if(Os.getOs().isMac()){
+      File f = new File("/opt/Formiko/runtime/bin/java");
+      if(f.exists()){return f.toString();}
     }
     return "java";
   }
