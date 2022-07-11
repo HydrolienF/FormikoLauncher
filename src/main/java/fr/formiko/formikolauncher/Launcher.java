@@ -10,12 +10,23 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 
+/**
+*{@summary Launcher interface.}<br>
+*All launcher aviable action are functions in this class.
+*@author Hydrolien
+*@lastEditedVersion 0.1
+*/
 public class Launcher {
   private Process pr;
   private Folder folder;
   private boolean userWantToDownloadNextVersion;
   private String args[];
 
+  /**
+  *{@summary Main constructor with the command line args.}<br>
+  *@params args the args to use or transfer to Formiko.jar.
+  *@lastEditedVersion 0.1
+  */
   public Launcher(String[] args){
     //TODO args=launcherArgs(args); (version=, no download of other version, etc)
     // TODO it remove from args the args that launcher understand & leave the other one for formiko.
@@ -32,6 +43,10 @@ public class Launcher {
   private String getVersion(){return Folder.getVersion();}
   public void setVersion(String version){Folder.setVersion(version);}
 
+  /**
+  *{@summary Main function that will download game if needed then launch game.}<br>
+  *@lastEditedVersion 0.1
+  */
   public void launch(){
     if(needToDownloadGame()){
       if(!downloadGame(getFolder().getLastStableVersion())){
@@ -46,6 +61,10 @@ public class Launcher {
     }
   }
 
+  /**
+  *{@summary Return true if we need to download the game.}<br>
+  *@lastEditedVersion 0.1
+  */
   public boolean needToDownloadGame(){
     File gameJarFolder = new File(getFolder().getFolderGameJar());
     if(!gameJarFolder.exists() || gameJarFolder.listFiles().length==0){
@@ -70,7 +89,12 @@ public class Launcher {
     }
   }
 
-
+  /**
+  *{@summary download the game at given version.}<br>
+  *@param version the version to download game at
+  *@return true if it work
+  *@lastEditedVersion 0.1
+  */
   public boolean downloadGame(String version){
     erreur.info("download Formiko"+version);
     boolean itWork=getFolder().downloadAndUnzip(
@@ -88,7 +112,12 @@ public class Launcher {
     return itWork;
   }
 
-  // return true if we need to do launch() again.
+  /**
+  *{@summary launch the game with selected version.}<br>
+  *Version can be set before call launchGame() with setVersion(String version).
+  *@return true if we need to do launch() again
+  *@lastEditedVersion 0.1
+  */
   public boolean launchGame(){
     // set up the command and parameter
     String s2 = "";
@@ -134,13 +163,18 @@ public class Launcher {
         return false;
     }
   }
+  /**
+  *{@summary Give path to Formiko.jar.}<br>
+  *@return path to Formiko.jar depending of the OS
+  *@lastEditedVersion 0.1
+  */
   public String getJarPath(){
     return getFolder().getFolderGameJar()+getVersion()+"/Formiko.jar";
   }
   /**
   *{@summary Give path to execute java.}<br>
-  *@lastEditedVersion 0.1
   *@return path to our java version depending of the OS
+  *@lastEditedVersion 0.1
   */
   public String getJavaCommand(){
     if(Os.getOs().isWindows()){
@@ -156,12 +190,18 @@ public class Launcher {
     return "java";
   }
 
-  //cf http://vkroz.github.io/posts/20170630-Java-interrupt-hook.html
+  /**
+  *{@summary This handler will be called on Control-C pressed.
+  *cf http://vkroz.github.io/posts/20170630-Java-interrupt-hook.html
+  *@lastEditedVersion 0.1
+  */
   private void handleControlC(){
     Runtime.getRuntime().addShutdownHook(new Thread() {
-
-      /** This handler will be called on Control-C pressed */
       @Override
+      /**
+      *{@summary This handler will be called on Control-C pressed.}
+      *@lastEditedVersion 0.1
+      */
       public void run() {
         System.out.println("Closing from launcher");
         if(pr!=null){
