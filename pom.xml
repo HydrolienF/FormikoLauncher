@@ -196,11 +196,21 @@
               <java>
                 <mainClass>${app.main.class}</mainClass>
               </java>
+              <copyright>Hydrolien</copyright>
+              <!-- <snapshot>
+
+              </snapshot> -->
             </project>
             <release>
               <github>
                 <owner>HydrolienF</owner>
                 <overwrite>false</overwrite>
+                <!-- <sign>true</sign> -->
+                <tagName>{{projectVersion}}</tagName>
+                <releaseName>{{tagName}}</releaseName>
+                <prerelease>
+                  <enabled>true</enabled>
+                </prerelease>
               </github>
             </release>
             <distributions>
@@ -214,11 +224,24 @@
                 </artifacts>
               </app>
             </distributions>
-            <!-- <template>
-              <snapshot>
-                true
-              </snapshot>
-            </template> -->
+            <signing>
+              <!-- <active>ALWAYS</active> -->
+              <armored>true</armored>
+              <files>true</files>
+              <passphrase>__DO_NOT_SET_HERE__</passphrase>
+              <publicKey>__DO_NOT_SET_HERE__</publicKey>
+              <secretKey>__DO_NOT_SET_HERE__</secretKey>
+            </signing>
+            <assemble>
+              <!-- <jpackage>
+                <app>
+                  <active>ALWAYS</active>
+                  <exported>true</exported>
+                  <extraProperties>
+                  </extraProperties>
+                </app>
+              </jpackage> -->
+            </assemble>
           </jreleaser>
         </configuration>
       </plugin>
