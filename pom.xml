@@ -25,7 +25,7 @@
     <dependency>
 	    <groupId>com.github.HydrolienF</groupId>
 	    <artifactId>usual</artifactId>
-	    <version>0.1.31</version>
+	    <version>0.2.44</version>
     </dependency>
   </dependencies>
 
