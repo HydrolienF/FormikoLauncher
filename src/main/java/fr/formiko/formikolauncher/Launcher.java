@@ -34,7 +34,7 @@ public class Launcher {
     Folder.setFolder(folder);
     userWantToDownloadNextVersion=false;
     this.args=args;
-    if(this.args==null || this.args[0]==null){
+    if(this.args==null || this.args.length==0 || this.args[0]==null){
       this.args=new String[0];
     }
   }

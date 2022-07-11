@@ -1,17 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-  </properties>
   <modelVersion>4.0.0</modelVersion>
   <groupId>fr.formiko</groupId>
   <artifactId>Formiko</artifactId>
   <packaging>jar</packaging>
-  <version>0.1</version>
+  <version>0.1.3</version>
   <name>FormikoLauncher</name>
+  <description>Launcher of the Formiko Game</description>
   <url>https://formiko.fr</url>
+  <!-- <docsUrl>https://formiko.fr/FormikoLauncher/javadoc/fr/formiko/formikolauncher/package-summary.html</docsUrl> -->
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>16</java.version>
+    <app.main.class>fr.formiko.formikolauncher.Main</app.main.class>
+    <app.distribution.directory>${project.build.directory}/distributions/app</app.distribution.directory>
+  </properties>
+
+  <licenses>
+    <license>
+      <name>Formiko License</name>
+      <url>https://raw.githubusercontent.com/HydrolienF/Formiko/master/LICENSE.md</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>HydrolienF</id>
+      <name>hydrolien</name>
+    </developer>
+  </developers>
+
 
   <repositories>
     <repository>
@@ -44,7 +65,7 @@
         </executions>
         <configuration>
           <executable>maven</executable>
-          <mainClass>fr.formiko.formikolauncher.Main</mainClass>
+          <mainClass>${app.main.class}</mainClass>
           <!-- optional -->
           <arguments>
             <args>${args}</args>
@@ -60,7 +81,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
-          <release>16</release>
+          <release>${java.version}</release>
           <compilerArgument>-Xlint:all</compilerArgument>
         </configuration>
       </plugin>
@@ -100,14 +121,16 @@
           <archive>
             <manifest>
             <addClasspath>true</addClasspath>
-            <mainClass>fr.formiko.formikolauncher.Main</mainClass>
+            <mainClass>${app.main.class}</mainClass>
             <!-- <classpathPrefix>dependency-jars/</classpathPrefix> -->
             </manifest>
           </archive>
         </configuration>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.2.0</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -117,6 +140,8 @@
           </execution>
         </executions>
         <configuration>
+          <attach>false</attach>
+          <appendAssemblyId>false</appendAssemblyId>
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
@@ -124,7 +149,7 @@
             <index>true</index>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>fr.formiko.formikolauncher.Main</mainClass>
+              <mainClass>${app.main.class}</mainClass>
             </manifest>
             <!-- <manifestEntries> -->
               <!-- <mode>development</mode> -->
@@ -159,6 +184,66 @@
           <additionalparam>-Xdoclint:none</additionalparam>
           <additionalOptions>-Xdoclint:none</additionalOptions>
           <additionalJOption>-Xdoclint:none</additionalJOption>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.jreleaser</groupId>
+        <artifactId>jreleaser-maven-plugin</artifactId>
+        <version>1.1.0</version>
+        <configuration>
+          <jreleaser>
+            <project>
+              <java>
+                <mainClass>${app.main.class}</mainClass>
+              </java>
+            </project>
+            <release>
+              <github>
+                <owner>HydrolienF</owner>
+                <overwrite>false</overwrite>
+              </github>
+            </release>
+            <distributions>
+              <app>
+                <artifacts>
+                  <artifact>
+                    <path>
+                      target/${project.artifactId}-${project.version}.jar
+                    </path>
+                  </artifact>
+                </artifacts>
+              </app>
+            </distributions>
+            <!-- <template>
+              <snapshot>
+                true
+              </snapshot>
+            </template> -->
+          </jreleaser>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.jreleaser</groupId>
+        <artifactId>jdks-maven-plugin</artifactId>
+        <version>1.1.0</version>
+        <configuration>
+          <pkgs>
+            <pkg>
+              <name>zuluLinux</name>
+              <platform>linux</platform>
+              <version>${java.version}</version>
+            </pkg>
+            <pkg>
+              <name>zuluOsx</name>
+              <platform>osx</platform>
+              <version>${java.version}</version>
+            </pkg>
+            <pkg>
+              <name>zuluWindows</name>
+              <platform>windows</platform>
+              <version>${java.version}</version>
+            </pkg>
+          </pkgs>
         </configuration>
       </plugin>
     </plugins>
