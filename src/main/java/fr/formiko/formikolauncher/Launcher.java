@@ -17,7 +17,8 @@ public class Launcher {
   private String args[];
 
   public Launcher(String[] args){
-    //TODO launcherArgs(args); (version=, no download of other version, etc)
+    //TODO args=launcherArgs(args); (version=, no download of other version, etc)
+    // TODO it remove from args the args that launcher understand & leave the other one for formiko.
     folder = new Folder();
     Folder.setFolder(folder);
     userWantToDownloadNextVersion=false;
@@ -139,7 +140,10 @@ public class Launcher {
   public String getJavaCommand(){
     // TODO return path to our java version depending of the OS.
     if(Os.getOs().isWindows()){
-      return "C:/Program Files/Formiko/runtime/bin/java";
+      File f = new File(System.getenv("ProgramFiles")+"/Formiko/runtime/bin/java.exe");
+      if(f.exists()){
+        return f.toString();
+      }
     }
     return "java";
   }
