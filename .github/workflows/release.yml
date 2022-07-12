@@ -50,7 +50,7 @@ jobs:
         cp README.md out/$nom/.
         cp LICENSE.md out/$nom/.
         cp version.md out/$nom/.
-        mkdir out/$nom/java/
+        cp .mvn/jvm.config out/$nom/.
 
         echo "zip part"
         cd out/
@@ -149,14 +149,15 @@ jobs:
     - name: build
       shell: pwsh
       run: |
-        # ./toMsi.ps1
+        mvn -ntp versions:set -DnewVersion="$(cat version.md)"
         mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko.zip" Formiko.zip'
-        mvn -ntp exec:java -Dargs='unzip Formiko.zip in/'
+        mvn -ntp exec:java -Dargs='unzip Formiko.zip .'
+        mv Formiko${{ steps.version.outputs.version }}/ in/
         mv in/Formiko.jar .
         ls in/
-        # jpackage --java-options "$(cat .mvn/jvm.config)" --input in -d out --name Formiko --main-jar Formiko.jar --main-class fr.formiko.formiko.Main --app-version ${{ steps.version.outputs.version }} --description "Formiko, a game about ant." --icon tools/icon.ico --runtime-image jlink/jWindows --win-shortcut --win-menu --license-file LICENSE.md --vendor Hydrolien -t msi --win-upgrade-uuid "1468751e-078f-4fab-80e4-fa15e9b364b3"
-        # rm -r in
-        # cscript addLaunchToMsi.js ${{ steps.version.outputs.version }}
+        jpackage --java-options "$(cat .mvn/jvm.config)" --input in -d out --name Formiko --main-jar Formiko.jar --main-class fr.formiko.formiko.Main --app-version ${{ steps.version.outputs.version }} --description "Formiko, a game about ant." --icon tools/icon.ico --runtime-image jlink/jWindows --win-shortcut --win-menu --license-file LICENSE.md --vendor Hydrolien -t msi --win-upgrade-uuid "1468751e-078f-4fab-80e4-fa15e9b364b3"
+        rm -r in
+        cscript tools/addLaunchToMsi.js ${{ steps.version.outputs.version }}
     - name: upload .msi artifact
       uses: actions/upload-release-asset@v1
       with:
