@@ -1,0 +1,119 @@
+#
+signing:
+  # Enables or disables file signing.
+  # Valid values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+  # Defaults to `NEVER`.
+  #
+  active: ALWAYS
+
+  # Generates an armored signature.
+  # Defaults to `false`.
+  #
+  armored: true
+
+  # How should GPG keys be handled.
+  # Valid values are [`MEMORY`, `FILE`, `COMMAND`, `COSIGN`].
+  # Defaults to `MEMORY`.
+  #
+  mode: MEMORY
+
+  # The passphrase required to read secret keys.
+  # If left unspecified, the `JRELEASER_GPG_PASSPHRASE`
+  # environment variable must be defined.
+  #
+  passphrase: __DO_NOT_SET_HERE__
+
+  # The public GPG (ascii armored) used to sign files and commits.
+  # If left unspecified, the `JRELEASER_GPG_PUBLIC_KEY`
+  # environment variable must be defined.
+  # Required when mode = `MEMORY` || `FILE`.
+  #
+  publicKey: __DO_NOT_SET_HERE__
+
+  # The private GPG (ascii armored) used to sign files and commits.
+  # If left unspecified, the `JRELEASER_GPG_SECRET_KEY`
+  # environment variable must be defined.
+  # Required when mode = `MEMORY` || `FILE`.
+  #
+  secretKey: __DO_NOT_SET_HERE__
+
+  # Sign files.
+  # Defaults to `true`.
+  #
+  files: true
+
+  # Sign distribution artifacts.
+  # Defaults to `true`.
+  #
+  artifacts: true
+
+  # Sign checksum files.
+  # Defaults to `true`.
+  #
+  checksums: true
+
+  # Settings used when mode = `COMMAND`.
+  #
+  command:
+    # The executable used for signing.
+    # If left unspecified, the `JRELEASER_GPG_EXECUTABLE`
+    # environment variable must be defined.
+    # Defaults to `gpg[.exe]`.
+    # When mode = `COMMAND`.
+    #
+    executable: gpg
+
+    # The directory from which gpg will load keyrings.
+    # If left unspecified, the `JRELEASER_GPG_HOMEDIR`
+    # environment variable must be defined.
+    # Defaults to empty.
+    # When mode = `COMMAND`.
+    #
+    homeDir: /home/users/duke/.gnugpg
+
+    # The "name" of the key to sign with.
+    # If left unspecified, the `JRELEASER_GPG_KEYNAME`
+    # environment variable must be defined.
+    # Defaults to empty.
+    # When mode = `COMMAND`.
+    #
+    keyName: 0CB28B71EF50
+
+    # The path to a public keyring to add to the list of keyrings.
+    # If left unspecified, the `JRELEASER_GPG_PUBLIC_KEYRING`
+    # environment variable must be defined.
+    # Defaults to empty.
+    # When mode = `COMMAND`.
+    #
+    publicKeyring: my-pubring.gpg
+
+    # Whether to add the default keyrings from gpg's home directory to the list of used keyrings.
+    # Defaults to `true`.
+    # When mode = `COMMAND`.
+    #
+    defaultKeyring: true
+
+    # Sets the arguments to be passed to gpg.
+    # When mode = `COMMAND`.
+    #
+    args:
+      - '--no-random-seed-file'
+
+  # Settings used when mode = `COSIGN`.
+  #
+  cosign:
+    # Tool version.
+    #
+    version: 1.4.1
+
+    # The private cosign key.
+    # If left unspecified, the `JRELEASER_COSIGN_PRIVATE_KEY`
+    # environment variable must be defined.
+    #
+    privateKeyFile: __DO_NOT_SET_HERE__
+
+    # The public cosign key.
+    # If left unspecified, the `JRELEASER_COSIGN_PUBLIC_KEY`
+    # environment variable must be defined.
+    #
+    publicKeyFile: __DO_NOT_SET_HERE__

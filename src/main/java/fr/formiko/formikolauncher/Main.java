@@ -1,15 +1,24 @@
 package fr.formiko.formikolauncher;
 
+import fr.formiko.usual.color;
+
+/**
+*{@summary Main class of the launcher package.}<br>
+*Initialize some data &#38; launch the launcher.
+*@author Hydrolien
+*@lastEditedVersion 0.1
+*/
 public class Main {
+  /**
+  *{@summary Initialize some data &#38; launch the launcher.}<br>
+  *@lastEditedVersion 0.1
+  */
   public static void main(String[] args) {
+    color.iniColor();
     Launcher l = new Launcher(args);
-    // if there isn't any folder in .formiko/game{
-    //   l.downloadGame(getLastVersion());
-    // }else if (can ping github && there is a new version aviable) {
-    //   if(ask for download){
-    //     l.downloadGame(getLastVersion());
-    //   }
-    // }
-    l.launchGame();
+
+    l.launch();
+    // l.downloadGame("2.26.24");
+    // l.launchGame();
   }
 }
