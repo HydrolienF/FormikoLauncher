@@ -129,7 +129,7 @@ jobs:
       run: |
         mvn -ntp compile
         echo "download jlink/"
-        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/JRE/releases/download/${{ env.JAVA_VERSION }}/jlink.zip" jlink.zip'
+        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/JRE/releases/download/${{ env.JRE_VERSION }}/jlink.zip" jlink.zip'
         mvn -ntp exec:java -Dargs='unzip jlink.zip jlink/'
         dir jlink/
     - name: Pull
@@ -155,7 +155,7 @@ jobs:
         mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko.zip" Formiko.zip'
         mvn -ntp exec:java -Dargs='unzip Formiko.zip formiko/'
         ls
-        mv formiko/Formiko${{ steps.version.outputs.version }}/ in/
+        mv formiko/ in/
         mv in/Formiko.jar .
         ls in/
         # end of commun par with all OS
@@ -185,7 +185,7 @@ jobs:
       run: |
         mvn -ntp compile
         echo "download jlink/"
-        mvn -ntp exec:java -Dargs='download https://github.com/HydrolienF/JRE/releases/download/${{ env.JAVA_VERSION }}/jlink.zip jlink.zip'
+        mvn -ntp exec:java -Dargs='download https://github.com/HydrolienF/JRE/releases/download/${{ env.JRE_VERSION }}/jlink.zip jlink.zip'
         mvn -ntp exec:java -Dargs='unzip jlink.zip jlink/'
         ls jlink/
     - name: Pull
@@ -207,7 +207,7 @@ jobs:
         mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko.zip" Formiko.zip'
         mvn -ntp exec:java -Dargs='unzip Formiko.zip formiko/'
         ls
-        mv formiko/Formiko${{ steps.version.outputs.version }}/ in/
+        mv formiko/ in/
         mv in/Formiko.jar .
         ls in/
         # end of commun par with all OS
@@ -239,7 +239,7 @@ jobs:
       run: |
         mvn -ntp compile
         echo "download jlink/"
-        mvn -ntp exec:java -Dargs='download https://github.com/HydrolienF/JRE/releases/download/${{ env.JAVA_VERSION }}/jlink.zip jlink.zip'
+        mvn -ntp exec:java -Dargs='download https://github.com/HydrolienF/JRE/releases/download/${{ env.JRE_VERSION }}/jlink.zip jlink.zip'
         mvn -ntp exec:java -Dargs='unzip jlink.zip jlink/'
         ls jlink/
     - name: Pull
@@ -261,7 +261,7 @@ jobs:
         mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko.zip" Formiko.zip'
         mvn -ntp exec:java -Dargs='unzip Formiko.zip formiko/'
         ls
-        mv formiko/Formiko${{ steps.version.outputs.version }}/ in/
+        mv formiko/ in/
         mv in/Formiko.jar .
         ls in/
         # end of commun par with all OS
