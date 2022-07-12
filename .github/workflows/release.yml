@@ -35,7 +35,7 @@ jobs:
       run: |
         mvn -ntp versions:set -DnewVersion="$(cat version.md)"
         mvn -ntp package
-        mv target/Formiko*-$(cat version.md)-jar-with-dependencies.jar Formiko.jar
+        mv target/Formiko-$(cat version.md).jar Formiko.jar
         echo "choose name"
         nom=Formiko$(cat version.md)
         if [[ -e out/ ]]; then
@@ -128,7 +128,7 @@ jobs:
       run: |
         mvn -ntp compile
         echo "download jlink/"
-        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/JRE/releases/download/1.0.3/jlink.zip" jlink.zip'
+        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/JRE/releases/download/18.0.1/jlink.zip" jlink.zip'
         mvn -ntp exec:java -Dargs='unzip jlink.zip jlink/'
         dir jlink/
     - name: Pull
@@ -147,102 +147,109 @@ jobs:
         echo "::set-output name=version::$version"
 
     - name: build
+      shell: pwsh
       run: |
-        ./toMsi.ps1
-        mv ./out/Formiko-${{ steps.version.outputs.version }}.msi ./out/Formiko${{ steps.version.outputs.version }}.msi
+        # ./toMsi.ps1
+        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko.zip" Formiko.zip'
+        mvn -ntp exec:java -Dargs='unzip Formiko.zip in/'
+        mv in/Formiko.jar .
+        ls in/
+        # jpackage --java-options "$(cat .mvn/jvm.config)" --input in -d out --name Formiko --main-jar Formiko.jar --main-class fr.formiko.formiko.Main --app-version ${{ steps.version.outputs.version }} --description "Formiko, a game about ant." --icon tools/icon.ico --runtime-image jlink/jWindows --win-shortcut --win-menu --license-file LICENSE.md --vendor Hydrolien -t msi --win-upgrade-uuid "1468751e-078f-4fab-80e4-fa15e9b364b3"
+        # rm -r in
+        # cscript addLaunchToMsi.js ${{ steps.version.outputs.version }}
     - name: upload .msi artifact
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{needs.releaseJob.outputs.output1}}
-        asset_path: ./out/Formiko${{ steps.version.outputs.version }}.msi
-        asset_name: Formiko${{ steps.version.outputs.version }}.msi
+        asset_path: ./out/Formiko$-{{ steps.version.outputs.version }}.msi
+        asset_name: Formiko-${{ steps.version.outputs.version }}.msi
         asset_content_type: application/msi
 
-  DebArtifact:
-    if: github.event.pull_request.merged == true
-    needs: releaseJob
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-java@v3
-      with:
-        distribution: ${{ env.JAVA_DISTRIBUTION }}
-        java-version: ${{ env.JAVA_VERSION }}
-
-    - name: jlink
-      run: |
-        mvn -ntp compile
-        echo "download jlink/"
-        mvn -ntp exec:java -Dargs='download https://github.com/HydrolienF/JRE/releases/download/1.0.3/jlink.zip jlink.zip'
-        mvn -ntp exec:java -Dargs='unzip jlink.zip jlink/'
-        ls jlink/
-    - name: Pull
-      run: |
-        git config pull.rebase false
-        git pull
-    - name: version
-      id: version
-      run: |
-        version=$(cat version.md)
-        echo "-------------"
-        echo $version
-        echo "-------------"
-        echo "::set-output name=version::$version"
-    - name: build
-      run: |
-        ./toDeb.sh
-        ls out/
-        mv out/formiko_${{ steps.version.outputs.version }}-1_amd64.deb out/Formiko${{ steps.version.outputs.version }}.deb
-    - name: upload .deb artifact
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{needs.releaseJob.outputs.output1}}
-        asset_path: ./out/Formiko${{ steps.version.outputs.version }}.deb
-        asset_name: Formiko${{ steps.version.outputs.version }}.deb
-        asset_content_type: application/deb
-
-  DmgArtifact:
-    if: github.event.pull_request.merged == true
-    needs: releaseJob
-    runs-on: macos-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-java@v3
-      with:
-        distribution: ${{ env.JAVA_DISTRIBUTION }}
-        java-version: ${{ env.JAVA_VERSION }}
-
-    - name: jlink
-      run: |
-        mvn -ntp compile
-        echo "download jlink/"
-        mvn -ntp exec:java -Dargs='download https://github.com/HydrolienF/JRE/releases/download/1.0.3/jlink.zip jlink.zip'
-        mvn -ntp exec:java -Dargs='unzip jlink.zip jlink/'
-        ls jlink/
-    - name: Pull
-      run: |
-        git config pull.rebase false
-        git pull
-    - name: version
-      id: version
-      run: |
-        version=$(cat version.md)
-        echo "-------------"
-        echo $version
-        echo "-------------"
-        echo "::set-output name=version::$version"
-    - name: build
-      run: |
-        ./toDmg.sh
-        ls out/
-        mv out/formiko-${{ steps.version.outputs.version }}.dmg out/Formiko${{ steps.version.outputs.version }}.dmg
-    - name: upload .deb artifact
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{needs.releaseJob.outputs.output1}}
-        asset_path: ./out/Formiko${{ steps.version.outputs.version }}.dmg
-        asset_name: Formiko${{ steps.version.outputs.version }}.dmg
-        asset_content_type: application/dmg
+  # DebArtifact:
+  #   if: github.event.pull_request.merged == true
+  #   needs: releaseJob
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - uses: actions/setup-java@v3
+  #     with:
+  #       distribution: ${{ env.JAVA_DISTRIBUTION }}
+  #       java-version: ${{ env.JAVA_VERSION }}
+  #
+  #   - name: jlink
+  #     run: |
+  #       mvn -ntp compile
+  #       echo "download jlink/"
+  #       mvn -ntp exec:java -Dargs='download https://github.com/HydrolienF/JRE/releases/download/18.0.1/jlink.zip jlink.zip'
+  #       mvn -ntp exec:java -Dargs='unzip jlink.zip jlink/'
+  #       ls jlink/
+  #   - name: Pull
+  #     run: |
+  #       git config pull.rebase false
+  #       git pull
+  #   - name: version
+  #     id: version
+  #     run: |
+  #       version=$(cat version.md)
+  #       echo "-------------"
+  #       echo $version
+  #       echo "-------------"
+  #       echo "::set-output name=version::$version"
+  #   - name: build
+  #     run: |
+  #       ./toDeb.sh
+  #       ls out/
+  #       mv out/formiko_${{ steps.version.outputs.version }}-1_amd64.deb out/Formiko${{ steps.version.outputs.version }}.deb
+  #   - name: upload .deb artifact
+  #     uses: actions/upload-release-asset@v1
+  #     with:
+  #       upload_url: ${{needs.releaseJob.outputs.output1}}
+  #       asset_path: ./out/Formiko${{ steps.version.outputs.version }}.deb
+  #       asset_name: Formiko${{ steps.version.outputs.version }}.deb
+  #       asset_content_type: application/deb
+  #
+  # DmgArtifact:
+  #   if: github.event.pull_request.merged == true
+  #   needs: releaseJob
+  #   runs-on: macos-latest
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - uses: actions/setup-java@v3
+  #     with:
+  #       distribution: ${{ env.JAVA_DISTRIBUTION }}
+  #       java-version: ${{ env.JAVA_VERSION }}
+  #
+  #   - name: jlink
+  #     run: |
+  #       mvn -ntp compile
+  #       echo "download jlink/"
+  #       mvn -ntp exec:java -Dargs='download https://github.com/HydrolienF/JRE/releases/download/18.0.1/jlink.zip jlink.zip'
+  #       mvn -ntp exec:java -Dargs='unzip jlink.zip jlink/'
+  #       ls jlink/
+  #   - name: Pull
+  #     run: |
+  #       git config pull.rebase false
+  #       git pull
+  #   - name: version
+  #     id: version
+  #     run: |
+  #       version=$(cat version.md)
+  #       echo "-------------"
+  #       echo $version
+  #       echo "-------------"
+  #       echo "::set-output name=version::$version"
+  #   - name: build
+  #     run: |
+  #       ./toDmg.sh
+  #       ls out/
+  #       mv out/formiko-${{ steps.version.outputs.version }}.dmg out/Formiko${{ steps.version.outputs.version }}.dmg
+  #   - name: upload .deb artifact
+  #     uses: actions/upload-release-asset@v1
+  #     with:
+  #       upload_url: ${{needs.releaseJob.outputs.output1}}
+  #       asset_path: ./out/Formiko${{ steps.version.outputs.version }}.dmg
+  #       asset_name: Formiko${{ steps.version.outputs.version }}.dmg
+  #       asset_content_type: application/dmg
 
 
 
