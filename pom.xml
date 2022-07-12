@@ -5,7 +5,7 @@
   <groupId>fr.formiko</groupId>
   <artifactId>Formiko</artifactId>
   <packaging>jar</packaging>
-  <version>0.1.3</version>
+  <version>0.1.5</version>
   <name>FormikoLauncher</name>
   <description>Launcher of the Formiko Game</description>
   <url>https://formiko.fr</url>
@@ -14,7 +14,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>16</java.version>
+    <java.version>18</java.version>
     <app.main.class>fr.formiko.formikolauncher.Main</app.main.class>
     <app.distribution.directory>${project.build.directory}/distributions/app</app.distribution.directory>
   </properties>
@@ -51,6 +51,7 @@
   </dependencies>
 
   <build>
+    <finalName>${project.artifactId}-${project.version}</finalName>
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -186,6 +187,34 @@
           <additionalJOption>-Xdoclint:none</additionalJOption>
         </configuration>
       </plugin>
+
+
+      <!-- <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>appassembler-maven-plugin</artifactId>
+        <version>2.1.0</version>
+        <configuration>
+          <assembleDirectory>${project.build.directory}/binary</assembleDirectory>
+          <repositoryLayout>flat</repositoryLayout>
+          <repositoryName>lib</repositoryName>
+          <programs>
+            <program>
+              <mainClass>${app.main.class}</mainClass>
+              <id>app</id>
+            </program>
+          </programs>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-distribution</id>
+            <phase>package</phase>
+            <goals>
+              <goal>assemble</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin> -->
+
       <plugin>
         <groupId>org.jreleaser</groupId>
         <artifactId>jreleaser-maven-plugin</artifactId>
@@ -204,7 +233,7 @@
             <release>
               <github>
                 <owner>HydrolienF</owner>
-                <overwrite>false</overwrite>
+                <overwrite>true</overwrite>
                 <!-- <sign>true</sign> -->
                 <tagName>{{projectVersion}}</tagName>
                 <releaseName>{{tagName}}</releaseName>
@@ -218,7 +247,7 @@
                 <artifacts>
                   <artifact>
                     <path>
-                      target/${project.artifactId}-${project.version}.jar
+                      target/${project.build.finalName}.jar
                     </path>
                   </artifact>
                 </artifacts>
@@ -233,19 +262,84 @@
               <secretKey>__DO_NOT_SET_HERE__</secretKey>
             </signing>
             <assemble>
-              <!-- <jpackage>
-                <app>
+              <jlink>
+                <app-jlink>
                   <active>ALWAYS</active>
-                  <exported>true</exported>
+                  <exported>false</exported>
+                  <platform>
+                    <replacements>
+                      <osx-aarch_64>mac</osx-aarch_64>
+                      <linux-aarch_64>linux</linux-aarch_64>
+                      <windows-aarch_64>windows</windows-aarch_64>
+                    </replacements>
+                  </platform>
+                  <executable>app</executable>
+                  <moduleNames>
+                    <moduleName>java.base</moduleName>
+                    <!-- <moduleName>com.acme.demo</moduleName> -->
+                  </moduleNames>
+                  <targetJdks>
+                    <targetJdk>
+                      <path>jmods/mac/</path>
+                      <platform>osx-aarch_64</platform>
+                    </targetJdk>
+                    <targetJdk>
+                      <path>jmods/linux/</path>
+                      <platform>linux-aarch_64</platform>
+                    </targetJdk>
+                    <targetJdk>
+                      <path>jmods/windows/</path>
+                      <platform>windows-aarch_64</platform>
+                    </targetJdk>
+                  </targetJdks>
+                  <mainJar>
+                    <path>target/${project.build.finalName}.jar</path>
+                  </mainJar>
+                  <!-- <output>target/</output> -->
                   <extraProperties>
                   </extraProperties>
-                </app>
-              </jpackage> -->
+                </app-jlink>
+              </jlink>
+              <jpackage>
+                <app-jpackage>
+                  <active>ALWAYS</active>
+                  <exported>true</exported>
+                  <jlink>app-jlink</jlink>
+                  <!-- <runtimeImages>
+                    <runtimeImage>
+                      <path>target/jreleaser/assemble/app-jlink/jlink/fr.formiko.Formiko-0.1.5-mac.zip</path>
+                      <platform>osx-aarch_64</platform>
+                    </runtimeImage>
+                    <runtimeImage>
+                      <path>target/jreleaser/assemble/app-jlink/jlink/fr.formiko.Formiko-0.1.5-linux.zip</path>
+                      <platform>linux-aarch_64</platform>
+                    </runtimeImage>
+                    <runtimeImage>
+                      <path>target/jreleaser/assemble/app-jlink/jlink/fr.formiko.Formiko-0.1.5-windows.zip</path>
+                      <platform>windows-aarch_64</platform>
+                    </runtimeImage>
+                  </runtimeImages> -->
+                  <!-- <linux>
+                    <types>[rpm]</types>
+                  </linux>
+                  <mac>
+                    <types>[dmg]</types>
+                  </mac>
+                  <windows>
+                    <types>[exe]</types>
+                  </windows> -->
+                  <vendor>Hydrolien</vendor>
+                  <!-- <appName>${project.name}</appName>
+                  <name>${project.name}</name> -->
+                  <!-- <extraProperties>
+                  </extraProperties> -->
+                </app-jpackage>
+              </jpackage>
             </assemble>
           </jreleaser>
         </configuration>
       </plugin>
-      <plugin>
+      <!-- <plugin>
         <groupId>org.jreleaser</groupId>
         <artifactId>jdks-maven-plugin</artifactId>
         <version>1.1.0</version>
@@ -268,7 +362,7 @@
             </pkg>
           </pkgs>
         </configuration>
-      </plugin>
+      </plugin> -->
     </plugins>
   </build>
 </project>
