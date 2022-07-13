@@ -237,10 +237,17 @@ jobs:
         echo "ls"
         ls
         echo "======================================================"
-        mv in/Formiko.jar .
+        echo "ls in/"
+        ls in/
+        echo "======================================================"
+        mv in/*/* in/.
+        rm in/Formiko${{ steps.version.outputs.version }}
         echo "======================================================"
         echo "ls"
         ls
+        echo "======================================================"
+        echo "ls in/"
+        ls in/
         echo "======================================================"
         # end of commun par with all OS
         # TOFIX shortcut don't seem's to work neether in menu, nor in terminal.
@@ -300,10 +307,17 @@ jobs:
         echo "ls"
         ls
         echo "======================================================"
-        mv in/Formiko.jar .
+        echo "ls in/"
+        ls in/
+        echo "======================================================"
+        mv in/*/* in/.
+        rm in/Formiko${{ steps.version.outputs.version }}
         echo "======================================================"
         echo "ls"
         ls
+        echo "======================================================"
+        echo "ls in/"
+        ls in/
         echo "======================================================"
         # end of commun par with all OS
         # TOFIX shortcut don't seem's to work neether in menu, nor in terminal.
