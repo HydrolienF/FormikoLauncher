@@ -114,61 +114,70 @@ jobs:
         git pull
         git push
 
-  # WindowsArtifact:
-  #   if: github.event.pull_request.merged == true
-  #   needs: releaseJob
-  #   runs-on: windows-latest
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   - uses: actions/setup-java@v3
-  #     with:
-  #       distribution: ${{ env.JAVA_DISTRIBUTION }}
-  #       java-version: ${{ env.JAVA_VERSION }}
-  #
-  #   - name: jlink
-  #     run: |
-  #       mvn -ntp compile
-  #       echo "download jlink/"
-  #       mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/JRE/releases/download/${{ env.JRE_VERSION }}/jlink.zip" jlink.zip'
-  #       mvn -ntp exec:java -Dargs='unzip jlink.zip jlink/'
-  #       dir jlink/
-  #   - name: Pull
-  #     run: |
-  #       git config pull.rebase false
-  #       git pull
-  #
-  #   - name: version
-  #     id: version
-  #     shell: pwsh
-  #     run: |
-  #       $version = cat version.md
-  #       echo "-------------"
-  #       echo $version
-  #       echo "-------------"
-  #       echo "::set-output name=version::$version"
-  #
-  #   - name: build
-  #     shell: pwsh
-  #     run: |
-  #       # Start of commun par with all OS
-  #       mvn -ntp versions:set -DnewVersion="$(cat version.md)"
-  #       mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko${{ steps.version.outputs.version }}.zip" Formiko.zip'
-  #       mvn -ntp exec:java -Dargs='unzip Formiko.zip in/'
-  #       ls
-  #       ls in/
-  #       mv in/Formiko.jar .
-  #       ls in/
-  #       # end of commun par with all OS
-  #       jpackage --java-options "$(cat .mvn/jvm.config)" --input in -d out --name Formiko --main-jar Formiko.jar --main-class fr.formiko.formiko.Main --app-version ${{ steps.version.outputs.version }} --description "Formiko, a game about ant." --icon tools/icon.ico --runtime-image jlink/jWindows --win-shortcut --win-menu --license-file LICENSE.md --vendor Hydrolien -t msi --win-upgrade-uuid "1468751e-078f-4fab-80e4-fa15e9b364b3"
-  #       rm -r in
-  #       cscript tools/addLaunchToMsi.js ${{ steps.version.outputs.version }}
-  #   - name: upload .msi artifact
-  #     uses: actions/upload-release-asset@v1
-  #     with:
-  #       upload_url: ${{needs.releaseJob.outputs.output1}}
-  #       asset_path: ./out/Formiko$-{{ steps.version.outputs.version }}.msi
-  #       asset_name: Formiko-${{ steps.version.outputs.version }}.msi
-  #       asset_content_type: application/msi
+  WindowsArtifact:
+    if: github.event.pull_request.merged == true
+    needs: releaseJob
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v3
+      with:
+        distribution: ${{ env.JAVA_DISTRIBUTION }}
+        java-version: ${{ env.JAVA_VERSION }}
+
+    - name: jlink
+      run: |
+        mvn -ntp compile
+        echo "download jlink/"
+        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/JRE/releases/download/${{ env.JRE_VERSION }}/jlink.zip" jlink.zip'
+        mvn -ntp exec:java -Dargs='unzip jlink.zip jlink/'
+        dir jlink/
+    - name: Pull
+      run: |
+        git config pull.rebase false
+        git pull
+
+    - name: version
+      id: version
+      shell: pwsh
+      run: |
+        $version = cat version.md
+        echo "-------------"
+        echo $version
+        echo "-------------"
+        echo "::set-output name=version::$version"
+
+    - name: build
+      shell: pwsh
+      run: |
+        # Start of commun par with all OS
+        mvn -ntp versions:set -DnewVersion="$(cat version.md)"
+        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko${{ steps.version.outputs.version }}.zip" Formiko.zip'
+        echo "======================================================"
+        echo "ls"
+        ls
+        echo "======================================================"
+        mvn -ntp exec:java -Dargs='unzip Formiko.zip in/'
+        echo "======================================================"
+        echo "ls"
+        ls
+        echo "======================================================"
+        mv in/Formiko.jar .
+        echo "======================================================"
+        echo "ls"
+        ls
+        echo "======================================================"
+        # end of commun par with all OS
+        jpackage --java-options "$(cat .mvn/jvm.config)" --input in -d out --name Formiko --main-jar Formiko.jar --main-class fr.formiko.formiko.Main --app-version ${{ steps.version.outputs.version }} --description "Formiko, a game about ant." --icon tools/icon.ico --runtime-image jlink/jWindows --win-shortcut --win-menu --license-file LICENSE.md --vendor Hydrolien -t msi --win-upgrade-uuid "1468751e-078f-4fab-80e4-fa15e9b364b3"
+        rm -r in
+        cscript tools/addLaunchToMsi.js ${{ steps.version.outputs.version }}
+    - name: upload .msi artifact
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{needs.releaseJob.outputs.output1}}
+        asset_path: ./out/Formiko$-{{ steps.version.outputs.version }}.msi
+        asset_name: Formiko-${{ steps.version.outputs.version }}.msi
+        asset_content_type: application/msi
 
   LinuxArtifact:
     if: github.event.pull_request.merged == true
@@ -204,12 +213,12 @@ jobs:
       run: |
         # Start of commun par with all OS
         mvn -ntp versions:set -DnewVersion="$(cat version.md)"
-        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko${{ steps.version.outputs.version }}.zip" Formiko${{ steps.version.outputs.version }}.zip'
+        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko${{ steps.version.outputs.version }}.zip" Formiko.zip'
         echo "======================================================"
         echo "ls"
         ls
         echo "======================================================"
-        mvn -ntp exec:java -Dargs='unzip Formiko${{ steps.version.outputs.version }}.zip in/'
+        mvn -ntp exec:java -Dargs='unzip Formiko.zip in/'
         echo "======================================================"
         echo "ls"
         ls
@@ -233,59 +242,68 @@ jobs:
         asset_name: Formiko${{ steps.version.outputs.version }}.deb
         asset_content_type: application/deb
 
-  # MacArtifact:
-  #   if: github.event.pull_request.merged == true
-  #   needs: releaseJob
-  #   runs-on: macos-latest
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   - uses: actions/setup-java@v3
-  #     with:
-  #       distribution: ${{ env.JAVA_DISTRIBUTION }}
-  #       java-version: ${{ env.JAVA_VERSION }}
-  #
-  #   - name: jlink
-  #     run: |
-  #       mvn -ntp compile
-  #       echo "download jlink/"
-  #       mvn -ntp exec:java -Dargs='download https://github.com/HydrolienF/JRE/releases/download/${{ env.JRE_VERSION }}/jlink.zip jlink.zip'
-  #       mvn -ntp exec:java -Dargs='unzip jlink.zip jlink/'
-  #       ls jlink/
-  #   - name: Pull
-  #     run: |
-  #       git config pull.rebase false
-  #       git pull
-  #   - name: version
-  #     id: version
-  #     run: |
-  #       version=$(cat version.md)
-  #       echo "-------------"
-  #       echo $version
-  #       echo "-------------"
-  #       echo "::set-output name=version::$version"
-  #   - name: build
-  #     run: |
-  #       # Start of commun par with all OS
-  #       mvn -ntp versions:set -DnewVersion="$(cat version.md)"
-  #       mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko${{ steps.version.outputs.version }}.zip" Formiko.zip'
-  #       mvn -ntp exec:java -Dargs='unzip Formiko.zip formiko/'
-  #       ls
-  #       mv formiko/ in/
-  #       mv in/Formiko.jar .
-  #       ls in/
-  #       # end of commun par with all OS
-  #       # TOFIX shortcut don't seem's to work neether in menu, nor in terminal.
-  #       # TOFIX icon is not used on tab screen or in menu screen
-  #       jpackage --java-options "$(cat .mvn/jvm.config)" --input in -d out --name Formiko --main-jar Formiko.jar --main-class fr.formiko.formiko.Main --app-version $(cat version.md) --description "Formiko, a game about ant." --icon tools/icon.icns --runtime-image jlink/jMac --license-file LICENSE.md --vendor Hydrolien -t dmg --mac-package-name formiko --mac-package-identifier "1468751e-078f-4fab-80e4-fa15e9b364b3"
-  #       ls out/
-  #       mv out/formiko-${{ steps.version.outputs.version }}.dmg out/Formiko${{ steps.version.outputs.version }}.dmg
-  #   - name: upload .deb artifact
-  #     uses: actions/upload-release-asset@v1
-  #     with:
-  #       upload_url: ${{needs.releaseJob.outputs.output1}}
-  #       asset_path: ./out/Formiko${{ steps.version.outputs.version }}.dmg
-  #       asset_name: Formiko${{ steps.version.outputs.version }}.dmg
-  #       asset_content_type: application/dmg
+  MacArtifact:
+    if: github.event.pull_request.merged == true
+    needs: releaseJob
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v3
+      with:
+        distribution: ${{ env.JAVA_DISTRIBUTION }}
+        java-version: ${{ env.JAVA_VERSION }}
+
+    - name: jlink
+      run: |
+        mvn -ntp compile
+        echo "download jlink/"
+        mvn -ntp exec:java -Dargs='download https://github.com/HydrolienF/JRE/releases/download/${{ env.JRE_VERSION }}/jlink.zip jlink.zip'
+        mvn -ntp exec:java -Dargs='unzip jlink.zip jlink/'
+        ls jlink/
+    - name: Pull
+      run: |
+        git config pull.rebase false
+        git pull
+    - name: version
+      id: version
+      run: |
+        version=$(cat version.md)
+        echo "-------------"
+        echo $version
+        echo "-------------"
+        echo "::set-output name=version::$version"
+    - name: build
+      run: |
+        # Start of commun par with all OS
+        mvn -ntp versions:set -DnewVersion="$(cat version.md)"
+        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko${{ steps.version.outputs.version }}.zip" Formiko.zip'
+        echo "======================================================"
+        echo "ls"
+        ls
+        echo "======================================================"
+        mvn -ntp exec:java -Dargs='unzip Formiko.zip in/'
+        echo "======================================================"
+        echo "ls"
+        ls
+        echo "======================================================"
+        mv in/Formiko.jar .
+        echo "======================================================"
+        echo "ls"
+        ls
+        echo "======================================================"
+        # end of commun par with all OS
+        # TOFIX shortcut don't seem's to work neether in menu, nor in terminal.
+        # TOFIX icon is not used on tab screen or in menu screen
+        jpackage --java-options "$(cat .mvn/jvm.config)" --input in -d out --name Formiko --main-jar Formiko.jar --main-class fr.formiko.formiko.Main --app-version $(cat version.md) --description "Formiko, a game about ant." --icon tools/icon.icns --runtime-image jlink/jMac --license-file LICENSE.md --vendor Hydrolien -t dmg --mac-package-name formiko --mac-package-identifier "1468751e-078f-4fab-80e4-fa15e9b364b3"
+        ls out/
+        mv out/formiko-${{ steps.version.outputs.version }}.dmg out/Formiko${{ steps.version.outputs.version }}.dmg
+    - name: upload .deb artifact
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{needs.releaseJob.outputs.output1}}
+        asset_path: ./out/Formiko${{ steps.version.outputs.version }}.dmg
+        asset_name: Formiko${{ steps.version.outputs.version }}.dmg
+        asset_content_type: application/dmg
 
 
 
