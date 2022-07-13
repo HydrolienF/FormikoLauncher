@@ -165,10 +165,15 @@ jobs:
         echo "ls in/"
         ls in/
         echo "======================================================"
+        mv in/*/* in/.
         mv in/Formiko.jar .
+        rm -fr in/Formiko${{ steps.version.outputs.version }}
         echo "======================================================"
         echo "ls"
         ls
+        echo "======================================================"
+        echo "ls in/"
+        ls in/
         echo "======================================================"
         # end of commun par with all OS
         jpackage --java-options "$(cat .mvn/jvm.config)" --input in -d out --name Formiko --main-jar Formiko.jar --main-class fr.formiko.formiko.Main --app-version ${{ steps.version.outputs.version }} --description "Formiko, a game about ant." --icon tools/icon.ico --runtime-image jlink/jWindows --win-shortcut --win-menu --license-file LICENSE.md --vendor Hydrolien -t msi --win-upgrade-uuid "1468751e-078f-4fab-80e4-fa15e9b364b3"
