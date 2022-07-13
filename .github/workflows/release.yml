@@ -204,20 +204,20 @@ jobs:
       run: |
         # Start of commun par with all OS
         mvn -ntp versions:set -DnewVersion="$(cat version.md)"
-        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko${{ steps.version.outputs.version }}.zip" Formiko.zip'
+        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko${{ steps.version.outputs.version }}.zip" Formiko${{ steps.version.outputs.version }}.zip'
         echo "======================================================"
-        echo "ls -R"
-        ls -R
+        echo "ls"
+        ls
         echo "======================================================"
-        mvn -ntp exec:java -Dargs='unzip Formiko.zip in/'
+        mvn -ntp exec:java -Dargs='unzip Formiko${{ steps.version.outputs.version }}.zip in/'
         echo "======================================================"
-        echo "ls -R"
-        ls -R
+        echo "ls"
+        ls
         echo "======================================================"
         mv in/Formiko.jar .
         echo "======================================================"
-        echo "ls -R"
-        ls -R
+        echo "ls"
+        ls
         echo "======================================================"
         # end of commun par with all OS
         # TOFIX shortcut don't seem's to work neether in menu, nor in terminal.
