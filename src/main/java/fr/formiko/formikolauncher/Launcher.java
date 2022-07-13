@@ -167,6 +167,7 @@ public class Launcher {
         return true;
       }
       default:
+      erreur.info("exit code "+pr.exitValue());
         return false;
     }
   }
