@@ -154,6 +154,8 @@ public class Launcher {
       System.out.println("[ERROR] An error ocurre in launcher.");
       e.printStackTrace();
     }
+    erreur.info("wait for the end of the Process")
+    pr.waitFor(10, TimeUnit.SECONDS);
     switch (pr.exitValue()) {
       case 2: {
         userWantToDownloadNextVersion=true;
