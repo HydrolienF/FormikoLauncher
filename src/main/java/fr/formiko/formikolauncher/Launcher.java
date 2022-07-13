@@ -1,14 +1,15 @@
 package fr.formiko.formikolauncher;
 
 import fr.formiko.usual.Folder;
-import fr.formiko.usual.Version;
 import fr.formiko.usual.Os;
+import fr.formiko.usual.Version;
 import fr.formiko.usual.erreur;
 import fr.formiko.usual.fichier;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
 
 /**
 *{@summary Launcher interface.}<br>
@@ -154,8 +155,12 @@ public class Launcher {
       System.out.println("[ERROR] An error ocurre in launcher.");
       e.printStackTrace();
     }
-    erreur.info("wait for the end of the Process")
-    pr.waitFor(10, TimeUnit.SECONDS);
+    erreur.info("wait for the end of the Process");
+    try {
+      pr.waitFor(10, TimeUnit.SECONDS);
+    }catch (InterruptedException e) {
+      erreur.erreur("Process have been interrupted");
+    }
     switch (pr.exitValue()) {
       case 2: {
         userWantToDownloadNextVersion=true;
