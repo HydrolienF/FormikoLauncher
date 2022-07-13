@@ -167,7 +167,7 @@ jobs:
         echo "======================================================"
         mv in/*/* in/.
         mv in/Formiko.jar .
-        rm -fr in/Formiko${{ steps.version.outputs.version }}
+        rm in/Formiko${{ steps.version.outputs.version }}
         echo "======================================================"
         echo "ls"
         ls
