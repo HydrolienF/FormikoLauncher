@@ -152,7 +152,7 @@ jobs:
       run: |
         # Start of commun par with all OS
         mvn -ntp versions:set -DnewVersion="$(cat version.md)"
-        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko.zip" Formiko.zip'
+        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko${{ steps.version.outputs.version }}.zip" Formiko.zip'
         mvn -ntp exec:java -Dargs='unzip Formiko.zip formiko/'
         ls
         mv formiko/ in/
@@ -204,12 +204,17 @@ jobs:
       run: |
         # Start of commun par with all OS
         mvn -ntp versions:set -DnewVersion="$(cat version.md)"
-        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko.zip" Formiko.zip'
+        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko${{ steps.version.outputs.version }}.zip" Formiko.zip'
         mvn -ntp exec:java -Dargs='unzip Formiko.zip in/'
-        ls in
-        mv in/*/* in/.
+        echo "======================================================"
+        echo "ls -r"
+        ls -r
+        echo "======================================================"
         mv in/Formiko.jar .
-        ls in/
+        echo "======================================================"
+        echo "ls -r"
+        ls -r
+        echo "======================================================"
         # end of commun par with all OS
         # TOFIX shortcut don't seem's to work neether in menu, nor in terminal.
         # TOFIX icon is not used on tab screen or in menu screen
@@ -258,7 +263,7 @@ jobs:
       run: |
         # Start of commun par with all OS
         mvn -ntp versions:set -DnewVersion="$(cat version.md)"
-        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko.zip" Formiko.zip'
+        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko${{ steps.version.outputs.version }}.zip" Formiko.zip'
         mvn -ntp exec:java -Dargs='unzip Formiko.zip formiko/'
         ls
         mv formiko/ in/
