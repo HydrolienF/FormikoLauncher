@@ -166,7 +166,6 @@ jobs:
         ls in/
         echo "======================================================"
         mv in/*/* in/.
-        mv in/Formiko.jar .
         rm in/Formiko${{ steps.version.outputs.version }}
         echo "======================================================"
         echo "ls"
