@@ -2,6 +2,7 @@ package fr.formiko.formikolauncher;
 
 import fr.formiko.usual.Folder;
 import fr.formiko.usual.Os;
+import fr.formiko.usual.ReadFile;
 import fr.formiko.usual.Version;
 import fr.formiko.usual.erreur;
 import fr.formiko.usual.fichier;
@@ -198,13 +199,19 @@ public class Launcher {
     }
     return "java";
   }
+  /**
+  *{@summary Give args to execute java.}<br>
+  *Args are download as ressources & can be find in .../app/jvm.config
+  *@return args for the JVM
+  *@lastEditedVersion 1.0
+  */
   public String getJVMConfig(){
     if(Os.getOs().isWindows()){
       File f = new File(getPathToLauncherFiles()+"app/jvm.config");
-      if(f.exists()){return ReadFile.ReadFile(f);}
+      if(f.exists()){return ReadFile.readFile(f);}
     }else if(Os.getOs().isLinux()){
       File f = new File(getPathToLauncherFiles()+"app/jvm.config");
-      if(f.exists()){return ReadFile.ReadFile(f);}
+      if(f.exists()){return ReadFile.readFile(f);}
     }else if(Os.getOs().isMac()){
       // File f = new File("/opt/Formiko/runtime/bin/java");
       // if(f.exists()){return f.toString();}
