@@ -123,11 +123,17 @@ public class Launcher {
   public boolean launchGame(){
     // set up the command and parameter
     String s2 = "";
+    String javaArgs [] = getJVMConfig().split("\n")[0].split(" ");
+    if(javaArgs==null || javaArgs.length==0){
+      javaArgs=new String[0];
+    }
     try {
-      String[] cmd = new String[4+args.length];
+      String[] cmd = new String[3+args.length+javaArgs.length];
       int k=0;
       cmd[k++] = getJavaCommand();
-      cmd[k++] = getJVMConfig();
+      for (String arg : javaArgs) {
+        cmd[k++]=arg;
+      }
       cmd[k++] = "-jar";
       cmd[k++] = getJarPath();
       for (String arg : args) {
