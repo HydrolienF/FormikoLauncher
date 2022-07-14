@@ -176,7 +176,7 @@ jobs:
         ls in/
         echo "======================================================"
         # end of commun par with all OS
-        jpackage --java-options "$(cat .mvn/jvm.config)" --input in -d out --name Formiko --main-jar Formiko.jar --main-class ${{ env.MAIN_CLASS }} --app-version ${{ steps.version.outputs.version }} --description "Formiko, a game about ant." --icon tools/icon.ico --runtime-image jlink/jWindows --win-shortcut --win-menu --license-file LICENSE.md --vendor Hydrolien -t msi --win-upgrade-uuid "1468751e-078f-4fab-80e4-fa15e9b364b3"
+        jpackage --java-options "$(cat .mvn/jvm.config)" --input in -d out --name Formiko --main-jar Formiko.jar --main-class ${{ env.MAIN_CLASS }} --app-version ${{ steps.version.outputs.version }} --description "Formiko, a game about ant." --icon tools/icon.ico --runtime-image jlink/jWindows --win-shortcut --win-menu --win-menu-group "Formiko" --license-file LICENSE.md --vendor Hydrolien -t msi --win-upgrade-uuid "1468751e-078f-4fab-80e4-fa15e9b364b3"
         rm -r in
         cscript tools/addLaunchToMsi.js ${{ steps.version.outputs.version }}
         echo "======================================================"
