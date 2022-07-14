@@ -123,9 +123,10 @@ public class Launcher {
     // set up the command and parameter
     String s2 = "";
     try {
-      String[] cmd = new String[3+args.length];
+      String[] cmd = new String[4+args.length];
       int k=0;
       cmd[k++] = getJavaCommand();
+      cmd[k++] = getJVMConfig();
       cmd[k++] = "-jar";
       cmd[k++] = getJarPath();
       for (String arg : args) {
@@ -182,20 +183,48 @@ public class Launcher {
   /**
   *{@summary Give path to execute java.}<br>
   *@return path to our java version depending of the OS
-  *@lastEditedVersion 0.1
+  *@lastEditedVersion 1.0
   */
   public String getJavaCommand(){
     if(Os.getOs().isWindows()){
-      File f = new File(System.getenv("ProgramFiles")+"/Formiko/runtime/bin/java.exe");
+      File f = new File(getPathToLauncherFiles()+"runtime/bin/java.exe");
       if(f.exists()){return f.toString();}
     }else if(Os.getOs().isLinux()){
-      File f = new File("/opt/formiko/lib/runtime/bin/java");
+      File f = new File(getPathToLauncherFiles()+"runtime/bin/java");
       if(f.exists()){return "/."+f.toString();}
     }else if(Os.getOs().isMac()){
-      File f = new File("/opt/Formiko/runtime/bin/java");
-      if(f.exists()){return f.toString();}
+      // File f = new File("/opt/Formiko/runtime/bin/java");
+      // if(f.exists()){return f.toString();}
     }
     return "java";
+  }
+  public String getJVMConfig(){
+    if(Os.getOs().isWindows()){
+      File f = new File(getPathToLauncherFiles()+"app/jvm.config");
+      if(f.exists()){return ReadFile.ReadFile(f);}
+    }else if(Os.getOs().isLinux()){
+      File f = new File(getPathToLauncherFiles()+"app/jvm.config");
+      if(f.exists()){return ReadFile.ReadFile(f);}
+    }else if(Os.getOs().isMac()){
+      // File f = new File("/opt/Formiko/runtime/bin/java");
+      // if(f.exists()){return f.toString();}
+    }
+    return "";
+  }
+  /**
+  *{@summary Give path to launcher files.}<br>
+  *@return path launcher files depending of the OS
+  *@lastEditedVersion 1.0
+  */
+  public String getPathToLauncherFiles(){
+    if(Os.getOs().isWindows()){
+      return System.getenv("ProgramFiles")+"/Formiko/";
+    }else if(Os.getOs().isLinux()){
+      return "/opt/formiko/lib/";
+    }else if(Os.getOs().isMac()){
+
+    }
+    return "";
   }
 
   /**
