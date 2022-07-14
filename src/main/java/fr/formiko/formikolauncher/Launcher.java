@@ -123,7 +123,11 @@ public class Launcher {
   public boolean launchGame(){
     // set up the command and parameter
     String s2 = "";
-    String javaArgs [] = getJVMConfig().split("\n")[0].split(" ");
+    String jvmConfig = getJVMConfig();
+    String javaArgs [] = null;
+    if(jvmConfig!=null){
+      javaArgs = jvmConfig.split("\n")[0].split(" ");
+    }
     if(javaArgs==null || javaArgs.length==0){
       javaArgs=new String[0];
     }
@@ -222,7 +226,7 @@ public class Launcher {
       // File f = new File("/opt/Formiko/runtime/bin/java");
       // if(f.exists()){return f.toString();}
     }
-    return "";
+    return null;
   }
   /**
   *{@summary Give path to launcher files.}<br>
