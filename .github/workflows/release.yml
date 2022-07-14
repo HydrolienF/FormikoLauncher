@@ -185,13 +185,13 @@ jobs:
         echo "ls out/"
         ls out/
         echo "======================================================"
-        mv ./out/Formiko-${{ steps.version.outputs.version }}.msi ${{ ARTIFACT_NAME }}.msi
+        mv ./out/Formiko-${{ steps.version.outputs.version }}.msi ${{ env.ARTIFACT_NAME }}.msi
     - name: upload .msi artifact
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{needs.releaseJob.outputs.output1}}
-        asset_path: ${{ ARTIFACT_NAME }}.msi
-        asset_name: ${{ ARTIFACT_NAME }}.msi
+        asset_path: ${{ env.ARTIFACT_NAME }}.msi
+        asset_name: ${{ env.ARTIFACT_NAME }}.msi
         asset_content_type: application/msi
 
   LinuxArtifact:
@@ -254,13 +254,13 @@ jobs:
         # TOFIX icon is not used on tab screen or in menu screen
         jpackage --java-options "$(cat .mvn/jvm.config)" --input in -d out --name Formiko --main-jar Formiko.jar --main-class fr.formiko.formiko.Main --app-version $(cat version.md) --description "Formiko, a game about ant." --icon tools/icon.png --runtime-image jlink/jLinux --license-file LICENSE.md --vendor Hydrolien -t deb --linux-package-name formiko --linux-shortcut --linux-deb-maintainer hydrolien.f@gmail.com --linux-menu-group "Game;StrategyGame" --linux-app-category games --resource-dir tools/debRessources/
         ls out/
-        mv out/formiko_${{ steps.version.outputs.version }}_amd64.deb ${{ ARTIFACT_NAME }}.deb
+        mv out/formiko_${{ steps.version.outputs.version }}_amd64.deb ${{ env.ARTIFACT_NAME }}.deb
     - name: upload .deb artifact
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{needs.releaseJob.outputs.output1}}
-        asset_path: ${{ ARTIFACT_NAME }}.deb
-        asset_name: ${{ ARTIFACT_NAME }}.deb
+        asset_path: ${{ env.ARTIFACT_NAME }}.deb
+        asset_name: ${{ env.ARTIFACT_NAME }}.deb
         asset_content_type: application/deb
 
   MacArtifact:
@@ -323,13 +323,13 @@ jobs:
         # TOFIX icon is not used on tab screen or in menu screen
         jpackage --java-options "$(cat .mvn/jvm.config)" --input in -d out --name Formiko --main-jar Formiko.jar --main-class fr.formiko.formiko.Main --app-version $(cat version.md) --description "Formiko, a game about ant." --icon tools/icon.icns --runtime-image jlink/jMac --license-file LICENSE.md --vendor Hydrolien -t dmg --mac-package-name formiko --mac-package-identifier "1468751e-078f-4fab-80e4-fa15e9b364b3"
         ls out/
-        mv out/formiko-${{ steps.version.outputs.version }}.dmg ${{ ARTIFACT_NAME }}.dmg
+        mv out/formiko-${{ steps.version.outputs.version }}.dmg ${{ env.ARTIFACT_NAME }}.dmg
     - name: upload .deb artifact
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{needs.releaseJob.outputs.output1}}
-        asset_path: ${{ ARTIFACT_NAME }}.dmg
-        asset_name: ${{ ARTIFACT_NAME }}.dmg
+        asset_path: ${{ env.ARTIFACT_NAME }}.dmg
+        asset_name: ${{ env.ARTIFACT_NAME }}.dmg
         asset_content_type: application/dmg
 
 
