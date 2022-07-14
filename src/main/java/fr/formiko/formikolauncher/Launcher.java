@@ -189,8 +189,8 @@ public class Launcher {
       File f = new File(System.getenv("ProgramFiles")+"/Formiko/runtime/bin/java.exe");
       if(f.exists()){return f.toString();}
     }else if(Os.getOs().isLinux()){
-      File f = new File("/opt/Formiko/runtime/bin/java");
-      if(f.exists()){return f.toString();}
+      File f = new File("/opt/formiko/lib/runtime/bin/java");
+      if(f.exists()){return "/."+f.toString();}
     }else if(Os.getOs().isMac()){
       File f = new File("/opt/Formiko/runtime/bin/java");
       if(f.exists()){return f.toString();}
