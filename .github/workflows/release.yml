@@ -11,7 +11,7 @@ env:
   JAVA_DISTRIBUTION: 'temurin'
   JRE_VERSION: '18.0.1'
   GITHUB_TOKEN: ${{ github.token }}
-  ARTIFACT_NAME: FormikoLauncher
+  ARTIFACT_NAME: 'FormikoLauncher'
 
 jobs:
   releaseJob:
