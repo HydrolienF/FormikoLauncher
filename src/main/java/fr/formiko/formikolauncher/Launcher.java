@@ -10,8 +10,9 @@ import fr.formiko.usual.fichier;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
-import java.util.concurrent.TimeUnit;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
 *{@summary Launcher interface.}<br>
@@ -146,19 +147,10 @@ public class Launcher {
       }
       System.out.println();//@a
       // create runtime to execute external command
-      // TODO use a ProcessBuilder.
-      pr = Runtime.getRuntime().exec(cmd);
+      ProcessBuilder pb = new ProcessBuilder(Arrays.asList(cmd))
+          .inheritIO();
+      pr=pb.start();
       handleControlC();
-
-      // retrieve output from command
-      String line;
-      try (BufferedReader br = new BufferedReader(new InputStreamReader(pr.getInputStream()))){
-        while ((line = br.readLine()) != null){
-          System.out.println(line);
-        }
-      }catch(Exception e) {
-        throw e;
-      }
     }catch (Exception e) {
       System.out.println("[ERROR] An error ocurre in launcher.");
       e.printStackTrace();
