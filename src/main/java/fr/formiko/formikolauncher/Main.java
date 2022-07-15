@@ -13,7 +13,7 @@ import java.util.List;
 *{@summary Main class of the launcher package.}<br>
 *Initialize some data &#38; launch the launcher.
 *@author Hydrolien
-*@lastEditedVersion 0.1
+*@lastEditedVersion 1.0
 */
 public class Main {
   private static boolean launchGame;
@@ -23,7 +23,7 @@ public class Main {
 
   /**
   *{@summary Initialize some data &#38; launch the launcher.}<br>
-  *@lastEditedVersion 0.1
+  *@lastEditedVersion 1.0
   */
   public static void main(String[] args) {
     color.iniColor();
@@ -50,7 +50,11 @@ public class Main {
     }
   }
 
-  //(version=, no download of other version, etc)
+  /**
+  *{@summary Launch some args.}<br>
+  *@return the args that Formiko.jar still need to have
+  *@lastEditedVersion 1.0
+  */
   private static List<String> launcherArgs(List<String> args){
     List<String> argsOut = new LinkedList<String>();
     for (String arg : args) {
