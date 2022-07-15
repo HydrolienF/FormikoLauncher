@@ -147,8 +147,16 @@ public class Launcher {
       }
       System.out.println();//@a
       // create runtime to execute external command
+      File fout = new File(Folder.getFolder().getFolderMain()+"log.txt");
+      // try {
+      //   f.createNewFile();
+      // }catch (IOException e) {
+      //   erreur.erreur("can't create log file");
+      //   return false;
+      // }
       ProcessBuilder pb = new ProcessBuilder(Arrays.asList(cmd))
-        .inheritIO();
+        // .inheritIO();
+        .redirectOutput(Redirect.appendTo(fout));
       pr=pb.start();
       // TODO use a ProcessBuilder.
       // pr = Runtime.getRuntime().exec(cmd);
