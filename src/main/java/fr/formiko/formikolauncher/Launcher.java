@@ -148,37 +148,25 @@ public class Launcher {
       }
       System.out.println();//@a
       // create runtime to execute external command
-      File fout = new File(Folder.getFolder().getFolderMain()+"log.txt");
-      // try {
-      //   f.createNewFile();
-      // }catch (IOException e) {
-      //   erreur.erreur("can't create log file");
-      //   return false;
-      // }
-      ProcessBuilder pb = new ProcessBuilder(Arrays.asList(cmd))
-        // .inheritIO();
-        .redirectOutput(Redirect.appendTo(fout));
+      ProcessBuilder pb = new ProcessBuilder(Arrays.asList(cmd));
+          // .inheritIO();
+      if(Main.logToFile){
+        File fout = new File(Folder.getFolder().getFolderTemporary()+"log.txt");
+        pb.redirectOutput(Redirect.appendTo(fout));
+      }else{
+        pb.redirectOutput(Redirect.INHERIT);
+      }
       pr=pb.start();
-      // TODO use a ProcessBuilder.
-      // pr = Runtime.getRuntime().exec(cmd);
+
       handleControlC();
 
-      // // retrieve output from command
-      // String line;
-      // try (BufferedReader br = new BufferedReader(new InputStreamReader(pr.getInputStream()))){
-      //   while ((line = br.readLine()) != null){
-      //     System.out.println(line);
-      //   }
-      // }catch(Exception e) {
-      //   throw e;
-      // }
     }catch (Exception e) {
       System.out.println("[ERROR] An error ocurre in launcher.");
       e.printStackTrace();
     }
     erreur.info("wait for the end of the Process");
     try {
-      pr.waitFor(10, TimeUnit.SECONDS);
+      pr.waitFor();
     }catch (InterruptedException e) {
       erreur.erreur("Process have been interrupted");
     }
@@ -210,8 +198,10 @@ public class Launcher {
       File f = new File(getPathToLauncherFiles()+"runtime/bin/java.exe");
       if(f.exists()){return f.toString();}
     }else if(Os.getOs().isLinux()){
-      File f = new File(getPathToLauncherFiles()+"runtime/bin/java");
-      if(f.exists()){return "/."+f.toString();}
+      // File f = new File(getPathToLauncherFiles()+"runtime/bin/java");
+      // if(f.exists()){return "/."+f.toString();}
+      File f = new File("/bin/javaformiko");
+      if(f.exists()){return "javaformiko";}
     }else if(Os.getOs().isMac()){
       // File f = new File("/opt/Formiko/runtime/bin/java");
       // if(f.exists()){return f.toString();}
