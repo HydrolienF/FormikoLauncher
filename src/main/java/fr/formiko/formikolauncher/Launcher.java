@@ -148,9 +148,21 @@ public class Launcher {
       System.out.println();//@a
       // create runtime to execute external command
       ProcessBuilder pb = new ProcessBuilder(Arrays.asList(cmd))
-          .inheritIO();
+        .inheritIO();
       pr=pb.start();
+      // TODO use a ProcessBuilder.
+      // pr = Runtime.getRuntime().exec(cmd);
       handleControlC();
+
+      // // retrieve output from command
+      // String line;
+      // try (BufferedReader br = new BufferedReader(new InputStreamReader(pr.getInputStream()))){
+      //   while ((line = br.readLine()) != null){
+      //     System.out.println(line);
+      //   }
+      // }catch(Exception e) {
+      //   throw e;
+      // }
     }catch (Exception e) {
       System.out.println("[ERROR] An error ocurre in launcher.");
       e.printStackTrace();
