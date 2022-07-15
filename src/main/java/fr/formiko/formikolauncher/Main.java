@@ -20,6 +20,7 @@ public class Main {
   private static boolean rmGame;
   private static boolean rmData;
   private static String versionToDownload;
+  public static boolean logToFile;
 
   /**
   *{@summary Initialize some data &#38; launch the launcher.}<br>
@@ -90,6 +91,10 @@ public class Main {
         case "vtd":
         case "versionToDownload":{
           versionToDownload=argOfTheArg;
+          break;
+        }
+        case "logToFile":{
+          logToFile=true;
           break;
         }
 
