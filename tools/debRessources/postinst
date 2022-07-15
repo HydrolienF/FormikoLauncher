@@ -1,7 +1,7 @@
+echo "chmod java"
+sudo chmod +x /opt/formiko/lib/runtime/bin/java
 echo "Create shortcut. You can launch Formiko in cmd line with:"
 echo "formiko"
 sudo ln -s /opt/formiko/bin/Formiko /bin/formiko
-echo "chmod java"
-sudo chmod +x /opt/formiko/lib/runtime/bin/java
 #echo "Install done. Launching game"
 #formiko &
