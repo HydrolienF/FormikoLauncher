@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
+import java.util.List;
 
 /**
 *{@summary Launcher interface.}<br>
@@ -22,23 +23,18 @@ public class Launcher {
   private Process pr;
   private Folder folder;
   private boolean userWantToDownloadNextVersion;
-  private String args[];
+  private List<String> args;
 
   /**
   *{@summary Main constructor with the command line args.}<br>
   *@params args the args to use or transfer to Formiko.jar.
   *@lastEditedVersion 0.1
   */
-  public Launcher(String[] args){
-    //TODO args=launcherArgs(args); (version=, no download of other version, etc)
-    // TODO it remove from args the args that launcher understand & leave the other one for formiko.
+  public Launcher(List<String> args){
     folder = new Folder();
     Folder.setFolder(folder);
     userWantToDownloadNextVersion=false;
     this.args=args;
-    if(this.args==null || this.args.length==0 || this.args[0]==null){
-      this.args=new String[0];
-    }
   }
 
   private Folder getFolder(){return folder;}
@@ -132,7 +128,7 @@ public class Launcher {
       javaArgs=new String[0];
     }
     try {
-      String[] cmd = new String[3+args.length+javaArgs.length];
+      String[] cmd = new String[3+args.size()+javaArgs.length];
       int k=0;
       cmd[k++] = getJavaCommand();
       for (String arg : javaArgs) {
@@ -196,7 +192,7 @@ public class Launcher {
   *@return path to our java version depending of the OS
   *@lastEditedVersion 1.0
   */
-  public String getJavaCommand(){
+  public static String getJavaCommand(){
     if(Os.getOs().isWindows()){
       File f = new File(getPathToLauncherFiles()+"runtime/bin/java.exe");
       if(f.exists()){return f.toString();}
@@ -215,17 +211,22 @@ public class Launcher {
   *@return args for the JVM
   *@lastEditedVersion 1.0
   */
-  public String getJVMConfig(){
-    if(Os.getOs().isWindows()){
-      File f = new File(getPathToLauncherFiles()+"app/jvm.config");
-      if(f.exists()){return ReadFile.readFile(f);}
-    }else if(Os.getOs().isLinux()){
-      File f = new File(getPathToLauncherFiles()+"app/jvm.config");
-      if(f.exists()){return ReadFile.readFile(f);}
-    }else if(Os.getOs().isMac()){
-      // File f = new File("/opt/Formiko/runtime/bin/java");
-      // if(f.exists()){return f.toString();}
-    }
+  public static String getJVMConfig(){
+    File f = new File(getPathToLauncherFiles()+"app/jvm.config");
+    if(f.exists()){return ReadFile.readFile(f);}
+    return null;
+  }
+  /**
+  *{@summary Return launcher version.}<br>
+  *Launcher Version is in .../app/version.md
+  *@return launcher version depending of the OS
+  *@lastEditedVersion 1.0
+  */
+  public static String getLauncherVersion(){
+    File f = new File(getPathToLauncherFiles()+"app/version.md");
+    if(f.exists()){return ReadFile.readFile(f).split("\n")[0];}
+    f = new File("version.md");
+    if(f.exists()){return ReadFile.readFile(f).split("\n")[0];}
     return null;
   }
   /**
@@ -233,7 +234,7 @@ public class Launcher {
   *@return path launcher files depending of the OS
   *@lastEditedVersion 1.0
   */
-  public String getPathToLauncherFiles(){
+  public static String getPathToLauncherFiles(){
     if(Os.getOs().isWindows()){
       return System.getenv("ProgramFiles")+"/Formiko/";
     }else if(Os.getOs().isLinux()){
