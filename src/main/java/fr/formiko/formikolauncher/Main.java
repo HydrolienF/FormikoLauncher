@@ -59,6 +59,7 @@ public class Main {
     List<String> argsOut = new LinkedList<String>();
     for (String arg : args) {
       if(arg==null){continue;}
+      String iniArg=arg;
       boolean withHyphen=false;
       arg=arg.replace("=",":");
       String t[] = arg.split(":");
@@ -98,8 +99,7 @@ public class Main {
         }
       }
       if(passToFormiko){
-        if(withHyphen){arg="-"+arg;}
-        argsOut.add(arg);
+        argsOut.add(iniArg);
       }
     }
     return argsOut;
