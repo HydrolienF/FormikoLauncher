@@ -157,19 +157,9 @@ public class Launcher {
         pb.redirectOutput(Redirect.INHERIT);
       }
       pr=pb.start();
-      // TODO use a ProcessBuilder.
-      // pr = Runtime.getRuntime().exec(cmd);
+
       handleControlC();
 
-      // // retrieve output from command
-      // String line;
-      // try (BufferedReader br = new BufferedReader(new InputStreamReader(pr.getInputStream()))){
-      //   while ((line = br.readLine()) != null){
-      //     System.out.println(line);
-      //   }
-      // }catch(Exception e) {
-      //   throw e;
-      // }
     }catch (Exception e) {
       System.out.println("[ERROR] An error ocurre in launcher.");
       e.printStackTrace();
@@ -208,8 +198,10 @@ public class Launcher {
       File f = new File(getPathToLauncherFiles()+"runtime/bin/java.exe");
       if(f.exists()){return f.toString();}
     }else if(Os.getOs().isLinux()){
-      File f = new File(getPathToLauncherFiles()+"runtime/bin/java");
-      if(f.exists()){return "/."+f.toString();}
+      // File f = new File(getPathToLauncherFiles()+"runtime/bin/java");
+      // if(f.exists()){return "/."+f.toString();}
+      File f = new File("/bin/javaformiko");
+      if(f.exists()){return "javaformiko";}
     }else if(Os.getOs().isMac()){
       // File f = new File("/opt/Formiko/runtime/bin/java");
       // if(f.exists()){return f.toString();}
