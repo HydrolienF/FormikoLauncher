@@ -128,12 +128,13 @@ jobs:
         java-version: ${{ env.JAVA_VERSION }}
 
     - name: jlink
+      shell: pwsh
       run: |
         mvn -ntp compile
         echo "download jlink/"
-        mvn -ntp exec:java -Dargs='download "https://github.com/HydrolienF/JRE/releases/download/${{ env.JRE_VERSION }}/jlink.zip" jlink.zip'
+        mvn -ntp exec:java -Dargs='download https://github.com/HydrolienF/JRE/releases/download/${{ env.JRE_VERSION }}/jlink.zip jlink.zip'
         mvn -ntp exec:java -Dargs='unzip jlink.zip jlink/'
-        dir jlink/
+        ls jlink/
     - name: Pull
       run: |
         git config pull.rebase false
