@@ -178,7 +178,7 @@ jobs:
 
   LinuxArtifact:
     env:
-      OS: 'linux'
+      OS: 'Linux'
     if: github.event.pull_request.merged == true
     needs: releaseJob
     runs-on: ubuntu-latest
