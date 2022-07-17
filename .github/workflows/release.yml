@@ -13,6 +13,7 @@ env:
   GITHUB_TOKEN: ${{ github.token }}
   ARTIFACT_NAME: 'FormikoLauncher'
   MAIN_CLASS: 'fr.formiko.formikolauncher.Main'
+  JPACKAGE: 'jpackage --java-options "$(cat .mvn/jvm.config)" --input in -d out --name Formiko --main-jar Formiko.jar --main-class ${{ env.MAIN_CLASS }} --app-version $(cat version.md) --description "Formiko, a game about ant." --license-file LICENSE.md  --vendor Hydrolien --runtime-image jlink/'
 
 jobs:
   releaseJob:
@@ -117,6 +118,8 @@ jobs:
         git push
 
   WindowsArtifact:
+    env:
+      OS: 'Windows'
     if: github.event.pull_request.merged == true
     needs: releaseJob
     runs-on: windows-latest
@@ -130,7 +133,7 @@ jobs:
     - name: jlink
       shell: pwsh
       run: |
-        mvn -ntp compile exec:java -Dargs='downloadAndUnzip https://github.com/HydrolienF/JRE/releases/download/${{ env.JRE_VERSION }}/jlink.zip jlink/'
+        mvn -ntp compile exec:java -Dargs='downloadAndUnzip https://github.com/HydrolienF/JRE/releases/download/${{ env.JRE_VERSION }}/jlink.zip jlink/ j${{ env.OS }}/'
         ls jlink/
     - name: Pull
       run: |
@@ -155,7 +158,7 @@ jobs:
         mvn -ntp exec:java -Dargs='downloadAndUnzip https://github.com/HydrolienF/FormikoLauncher/releases/download/${{ steps.version.outputs.version }}/Formiko${{ steps.version.outputs.version }}.zip in/ Formiko${{ steps.version.outputs.version }}/'
         ls in/
         # end of commun par with all OS
-        jpackage --java-options "$(cat .mvn/jvm.config)" --input in -d out --name Formiko --main-jar Formiko.jar --main-class ${{ env.MAIN_CLASS }} --app-version ${{ steps.version.outputs.version }} --description "Formiko, a game about ant." --icon tools/icon.ico --runtime-image jlink/jWindows --win-shortcut --win-menu --win-menu-group "Formiko" --license-file LICENSE.md --vendor Hydrolien -t msi --win-upgrade-uuid "1468751e-078f-4fab-80e4-fa15e9b364b3"
+        ${{ env.JPACKAGE }} --icon tools/icon.ico --win-shortcut --win-menu --win-menu-group "Formiko" -t msi --win-upgrade-uuid "1468751e-078f-4fab-80e4-fa15e9b364b3"
         rm -r in
         cscript tools/addLaunchToMsi.js ${{ steps.version.outputs.version }}
         echo "======================================================"
@@ -175,6 +178,8 @@ jobs:
         asset_content_type: application/msi
 
   LinuxArtifact:
+    env:
+      OS: 'linux'
     if: github.event.pull_request.merged == true
     needs: releaseJob
     runs-on: ubuntu-latest
@@ -187,7 +192,7 @@ jobs:
 
     - name: jlink
       run: |
-        mvn -ntp compile exec:java -Dargs='downloadAndUnzip https://github.com/HydrolienF/JRE/releases/download/${{ env.JRE_VERSION }}/jlink.zip jlink/'
+        mvn -ntp compile exec:java -Dargs='downloadAndUnzip https://github.com/HydrolienF/JRE/releases/download/${{ env.JRE_VERSION }}/jlink.zip jlink/ j${{ env.OS }}/'
         ls jlink/
     - name: Pull
       run: |
@@ -210,7 +215,7 @@ jobs:
         # end of commun par with all OS
         # TOFIX shortcut don't seem's to work neether in menu, nor in terminal.
         # TOFIX icon is not used on tab screen or in menu screen
-        jpackage --java-options "$(cat .mvn/jvm.config)" --input in -d out --name Formiko --main-jar Formiko.jar --main-class ${{ env.MAIN_CLASS }} --app-version $(cat version.md) --description "Formiko, a game about ant." --icon tools/icon.png --runtime-image jlink/jLinux --license-file LICENSE.md --vendor Hydrolien -t deb --linux-package-name formiko --linux-shortcut --linux-deb-maintainer hydrolien.f@gmail.com --linux-menu-group "Game;StrategyGame" --linux-app-category games --resource-dir tools/debRessources/
+        ${{ env.JPACKAGE }} --icon tools/icon.png -t deb --linux-package-name formiko --linux-shortcut --linux-deb-maintainer hydrolien.f@gmail.com --linux-menu-group "Game;StrategyGame" --linux-app-category games --resource-dir tools/debRessources/
         ls out/
         mv out/formiko_${{ steps.version.outputs.version }}_amd64.deb ${{ env.ARTIFACT_NAME }}.deb
     - name: upload .deb artifact
@@ -222,6 +227,8 @@ jobs:
         asset_content_type: application/deb
 
   MacArtifact:
+    env:
+      OS: 'Mac'
     if: github.event.pull_request.merged == true
     needs: releaseJob
     runs-on: macos-latest
@@ -234,7 +241,7 @@ jobs:
 
     - name: jlink
       run: |
-        mvn -ntp compile exec:java -Dargs='downloadAndUnzip https://github.com/HydrolienF/JRE/releases/download/${{ env.JRE_VERSION }}/jlink.zip jlink/'
+        mvn -ntp compile exec:java -Dargs='downloadAndUnzip https://github.com/HydrolienF/JRE/releases/download/${{ env.JRE_VERSION }}/jlink.zip jlink/ j${{ env.OS }}/'
         ls jlink/
     - name: Pull
       run: |
@@ -257,7 +264,7 @@ jobs:
         # end of commun par with all OS
         # TOFIX shortcut don't seem's to work neether in menu, nor in terminal.
         # TOFIX icon is not used on tab screen or in menu screen
-        jpackage --java-options "$(cat .mvn/jvm.config)" --input in -d out --name Formiko --main-jar Formiko.jar --main-class ${{ env.MAIN_CLASS }} --app-version $(cat version.md) --description "Formiko, a game about ant." --icon tools/icon.icns --runtime-image jlink/jMac --license-file LICENSE.md --vendor Hydrolien -t dmg --mac-package-name formiko --mac-package-identifier "1468751e-078f-4fab-80e4-fa15e9b364b3"
+        ${{ env.JPACKAGE }} --icon tools/icon.icns -t dmg --mac-package-name formiko --mac-package-identifier "1468751e-078f-4fab-80e4-fa15e9b364b3"
         ls out/
         mv out/formiko-${{ steps.version.outputs.version }}.dmg ${{ env.ARTIFACT_NAME }}.dmg
     - name: upload .dmg artifact
