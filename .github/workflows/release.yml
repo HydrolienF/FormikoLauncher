@@ -54,6 +54,7 @@ jobs:
         cp LICENSE.md out/$nom/.
         cp version.md out/$nom/.
         cp .mvn/jvm.config out/$nom/.
+        echo ${{ env.JRE_VERSION }} > out/$nom/JREVersion.md
 
         echo "zip part"
         cd out/
