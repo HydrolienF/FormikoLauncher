@@ -4,6 +4,7 @@ import fr.formiko.usual.Folder;
 import fr.formiko.usual.Os;
 import fr.formiko.usual.ReadFile;
 import fr.formiko.usual.Version;
+import fr.formiko.usual.Progression;
 import fr.formiko.usual.ecrireUnFichier;
 import fr.formiko.usual.erreur;
 import fr.formiko.usual.fichier;
@@ -21,13 +22,15 @@ import java.util.concurrent.TimeUnit;
 *{@summary Launcher interface.}<br>
 *All launcher aviable action are functions in this class.
 *@author Hydrolien
-*@lastEditedVersion 0.1
+*@lastEditedVersion 1.0
 */
 public class Launcher {
   private Process pr;
   private Folder folder;
   private boolean userWantToDownloadNextVersion;
   private List<String> args;
+  /** Getter have lazy initialization. */
+  private Progression progression;
 
   /**
   *{@summary Main constructor with the command line args.}<br>
@@ -44,7 +47,31 @@ public class Launcher {
   private Folder getFolder(){return folder;}
   private String getVersion(){return Folder.getVersion();}
   public void setVersion(String version){Folder.setVersion(version);}
+  /**
+  *{@summary Getter with lazy initialization.}<br>
+  *@lastEditedVersion 1.0
+  */
+  public Progression getProgression() {
+    if(progression==null){progression=new ProgressionCLI();}
+    return progression;
+  }
+	public void setProgression(Progression progression) {this.progression=progression;}
 
+
+  class ProgressionCLI implements Progression {
+    @Override
+    public void iniLauncher(){
+      fichier.setProgression(this);
+    }
+    @Override
+    public void setDownloadingMessage(String message){
+      System.out.println("Dowload: "+message);
+    }
+    @Override
+    public void setDownloadingValue(int value){
+      System.out.println(value+"% done");
+    }
+  }
   /**
   *{@summary Main function that will download game if needed then launch game.}<br>
   *@lastEditedVersion 0.1
@@ -100,6 +127,7 @@ public class Launcher {
   */
   public boolean downloadGame(String version){
     erreur.info("download Formiko"+version);
+    getProgression().iniLauncher();
     File fi = new File(getFolder().getFolderGameJar()+version+"/");
     fi.mkdirs();
     boolean itWork=fichier.downloadAndUnzip(
@@ -110,6 +138,7 @@ public class Launcher {
     if(!itWork){return itWork;}
     if(itWork){
       setVersion(version);
+      getProgression().setDownloadingValue(20);
     }
     String wantedVersionJRE=ReadFile.readFile(getFolder().getFolderGameJar()+version+"/JREVersion.md").split("\n")[0];
     String currentVersionJRE=null;
@@ -143,6 +172,7 @@ public class Launcher {
       gs.add(versionJRE);
       ecrireUnFichier.ecrireUnFichier(gs,getFolder().getFolderGameJar()+"JRE/JREVersion.md");
       erreur.info("downloaded JRE "+versionJRE);
+      getProgression().setDownloadingValue(70);
     }else{
       erreur.erreur("fail to download JRE "+versionJRE);
     }
