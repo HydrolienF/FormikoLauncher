@@ -141,15 +141,32 @@ public class Launcher {
       getProgression().setDownloadingValue(20);
     }
     String wantedVersionJRE=ReadFile.readFile(getFolder().getFolderGameJar()+version+"/JREVersion.md").split("\n")[0];
+    if(!canUseLauncherJRE(wantedVersionJRE) && !canUseDownloadedJRE(wantedVersionJRE)){
+      itWork=downloadJRE(wantedVersionJRE);
+    }
+    return itWork;
+  }
+  public boolean canUseLauncherJRE(String wantedVersionJRE){
+    String currentVersionJRE=null;
+    File f=new File(getPathToLauncherFiles()+"app/JREVersion.md");
+    if(f.exists()){
+      currentVersionJRE=ReadFile.readFile(f).split("\n")[0];
+    }
+    if(currentVersionJRE==null || !currentVersionJRE.equals(wantedVersionJRE)){
+      return false;
+    }
+    return true;
+  }
+  public boolean canUseDownloadedJRE(String wantedVersionJRE){
     String currentVersionJRE=null;
     File f=new File(getFolder().getFolderGameJar()+"JRE/JREVersion.md");
     if(f.exists()){
       currentVersionJRE=ReadFile.readFile(f).split("\n")[0];
     }
     if(currentVersionJRE==null || !currentVersionJRE.equals(wantedVersionJRE)){
-      itWork=downloadJRE(wantedVersionJRE);
+      return false;
     }
-    return itWork;
+    return true;
   }
   /**
   *{@summary download the JRE at given version.}<br>
@@ -262,7 +279,21 @@ public class Launcher {
   *@lastEditedVersion 1.0
   */
   public String getJavaCommand(){
-    String pathToJava=getFolder().getFolderGameJar()+"JRE/bin/java";
+    String pathToJava=getPathToLauncherFiles()+"runtime/bin/java";
+    String wantedVersionJRE=ReadFile.readFile(getFolder().getFolderGameJar()+getVersion()+"/JREVersion.md").split("\n")[0];
+    if(canUseLauncherJRE(wantedVersionJRE)){
+      if(Os.getOs().isWindows()){
+        File f = new File(pathToJava+".exe");
+        if(f.exists()){return f.toString();}
+      }else if(Os.getOs().isLinux()){
+        File f = new File(pathToJava);
+        if(f.exists()){return f.toString();}
+      }else if(Os.getOs().isMac()){
+        File f = new File(pathToJava);
+        if(f.exists()){return f.toString();}
+      }
+    }
+    pathToJava=getFolder().getFolderGameJar()+"JRE/bin/java";
     if(Os.getOs().isWindows()){
       File f = new File(pathToJava+".exe");
       if(f.exists()){return f.toString();}
@@ -310,7 +341,7 @@ public class Launcher {
     }else if(Os.getOs().isLinux()){
       return "/opt/formiko/lib/";
     }else if(Os.getOs().isMac()){
-
+      // TODO
     }
     return "";
   }
