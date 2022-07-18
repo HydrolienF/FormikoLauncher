@@ -35,12 +35,10 @@ public class Main {
     Launcher l = new Launcher(launcherArgs(Arrays.asList(args)));
 
     if(rmData){
-      Folder f = new Folder();
-      fichier.deleteDirectory(f.getFolderGameJar());
+      rmData();
     }
     if(rmGame){
-      Folder f = new Folder();
-      fichier.deleteDirectory(f.getFolderMain());
+      rmGame();
     }
 
     if(versionToDownload!=null){
@@ -49,6 +47,23 @@ public class Main {
     if(launchGame){
       l.launch();
     }
+  }
+  /**
+  *{@summary Remove Data folder.}<br>
+  *@lastEditedVersion 1.0
+  */
+  public static void rmData(){
+    Folder f = new Folder();
+    fichier.deleteDirectory(f.getFolderGameJar());
+  }
+  /**
+  *{@summary Remove Game folder.}
+  *JRE &#38; all version of the game.<br>
+  *@lastEditedVersion 1.0
+  */
+  public static void rmGame(){
+    Folder f = new Folder();
+    fichier.deleteDirectory(f.getFolderMain());
   }
 
   /**
