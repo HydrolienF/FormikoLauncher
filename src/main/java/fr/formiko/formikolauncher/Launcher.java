@@ -4,8 +4,10 @@ import fr.formiko.usual.Folder;
 import fr.formiko.usual.Os;
 import fr.formiko.usual.ReadFile;
 import fr.formiko.usual.Version;
+import fr.formiko.usual.ecrireUnFichier;
 import fr.formiko.usual.erreur;
 import fr.formiko.usual.fichier;
+import fr.formiko.usual.structures.listes.GString;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -97,17 +99,46 @@ public class Launcher {
   */
   public boolean downloadGame(String version){
     erreur.info("download Formiko"+version);
-    boolean itWork=getFolder().downloadAndUnzip(
+    File fi = new File(getFolder().getFolderGameJar()+version+"/");
+    fi.mkdirs();
+    boolean itWork=fichier.downloadAndUnzip(
         "https://github.com/HydrolienF/Formiko/releases/download/"+version+"/Formiko"+version+".zip",
-        getFolder().getFolderGameJar(), true);
+        // getFolder().getFolderGameJar());
+        getFolder().getFolderGameJar()+version+"/",
+        "Formiko"+version+"/");
     if(!itWork){return itWork;}
-    File temp = new File(getFolder().getFolderGameJar()+"Formiko"+version+"/");
-    if(!temp.renameTo(new File(getFolder().getFolderGameJar()+version+"/"))){
-      erreur.erreur("Fail to rename folder");
-      fichier.deleteDirectory(temp);
-    }
     if(itWork){
       setVersion(version);
+    }
+    String wantedVersionJRE=ReadFile.readFile(getFolder().getFolderGameJar()+version+"/JREVersion.md").split("\n")[0];
+    String currentVersionJRE=null;
+    File f=new File(getFolder().getFolderGameJar()+"JRE/JREVersion.md");
+    if(f.exists()){
+      currentVersionJRE=ReadFile.readFile(f).split("\n")[0];
+    }
+    if(currentVersionJRE==null || !currentVersionJRE.equals(wantedVersionJRE)){
+      itWork=downloadJRE(wantedVersionJRE);
+    }
+    return itWork;
+  }
+
+  public boolean downloadJRE(String versionJRE){
+    // if(getJavaCommand().equals("java")){ //no JRE downloaded
+    String osName=null;
+    if(Os.getOs().isWindows()){osName="Windows";}
+    if(Os.getOs().isLinux()){osName="Linux";}
+    if(Os.getOs().isMac()){osName="Mac";}
+    boolean itWork=fichier.downloadAndUnzip(
+        "https://github.com/HydrolienF/JRE/releases/download/"+versionJRE+"/jlink.zip/",
+        getFolder().getFolderGameJar()+"JRE/",
+        "j"+osName+"/");
+    if(itWork){
+      GString gs = new GString();
+      gs.add(versionJRE);
+      ecrireUnFichier.ecrireUnFichier(gs,getFolder().getFolderGameJar()+"JRE/JREVersion.md");
+      erreur.info("downloaded JRE "+versionJRE);
+    }else{
+      erreur.erreur("fail to download JRE "+versionJRE);
     }
     return itWork;
   }
@@ -182,7 +213,7 @@ public class Launcher {
   }
   /**
   *{@summary Give path to Formiko.jar.}<br>
-  *@return path to Formiko.jar depending of the OS
+  *@return path to Formiko.jar depending of the Os
   *@lastEditedVersion 0.1
   */
   public String getJarPath(){
@@ -190,21 +221,19 @@ public class Launcher {
   }
   /**
   *{@summary Give path to execute java.}<br>
-  *@return path to our java version depending of the OS
+  *@return path to our java version depending of the Os
   *@lastEditedVersion 1.0
   */
-  public static String getJavaCommand(){
+  public String getJavaCommand(){
     if(Os.getOs().isWindows()){
-      File f = new File(getPathToLauncherFiles()+"runtime/bin/java.exe");
+      File f = new File(getFolder().getFolderGameJar()+"JRE/runtime/bin/java.exe");
       if(f.exists()){return f.toString();}
     }else if(Os.getOs().isLinux()){
-      // File f = new File(getPathToLauncherFiles()+"runtime/bin/java");
-      // if(f.exists()){return "/."+f.toString();}
-      File f = new File("/bin/javaformiko");
-      if(f.exists()){return "javaformiko";}
+      File f = new File(getFolder().getFolderGameJar()+"JRE/runtime/bin/java");
+      if(f.exists()){return f.toString();}
     }else if(Os.getOs().isMac()){
-      // File f = new File("/opt/Formiko/runtime/bin/java");
-      // if(f.exists()){return f.toString();}
+      File f = new File(getFolder().getFolderGameJar()+"JRE/runtime/bin/java");
+      if(f.exists()){return f.toString();}
     }
     return "java";
   }
@@ -222,7 +251,7 @@ public class Launcher {
   /**
   *{@summary Return launcher version.}<br>
   *Launcher Version is in .../app/version.md
-  *@return launcher version depending of the OS
+  *@return launcher version depending of the Os
   *@lastEditedVersion 1.0
   */
   public static String getLauncherVersion(){
@@ -234,7 +263,7 @@ public class Launcher {
   }
   /**
   *{@summary Give path to launcher files.}<br>
-  *@return path launcher files depending of the OS
+  *@return path launcher files depending of the Os
   *@lastEditedVersion 1.0
   */
   public static String getPathToLauncherFiles(){
