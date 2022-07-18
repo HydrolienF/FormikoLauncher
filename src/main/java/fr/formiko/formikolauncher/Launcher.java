@@ -92,10 +92,11 @@ public class Launcher {
   }
 
   /**
-  *{@summary download the game at given version.}<br>
+  *{@summary Download the game at given version.}<br>
+  *If needed it will download JRE
   *@param version the version to download game at
   *@return true if it work
-  *@lastEditedVersion 0.1
+  *@lastEditedVersion 1.0
   */
   public boolean downloadGame(String version){
     erreur.info("download Formiko"+version);
@@ -121,7 +122,12 @@ public class Launcher {
     }
     return itWork;
   }
-
+  /**
+  *{@summary download the JRE at given version.}<br>
+  *@param versionJRE the version to download JRE at
+  *@return true if it work
+  *@lastEditedVersion 1.0
+  */
   public boolean downloadJRE(String versionJRE){
     // if(getJavaCommand().equals("java")){ //no JRE downloaded
     String osName=null;
@@ -206,9 +212,10 @@ public class Launcher {
         userWantToDownloadNextVersion=true;
         return true;
       }
-      default:
-      erreur.info("exit code "+pr.exitValue());
+      default:{
+        erreur.info("exit code "+pr.exitValue());
         return false;
+      }
     }
   }
   /**
@@ -225,14 +232,15 @@ public class Launcher {
   *@lastEditedVersion 1.0
   */
   public String getJavaCommand(){
+    String pathToJava=getFolder().getFolderGameJar()+"JRE/bin/java";
     if(Os.getOs().isWindows()){
-      File f = new File(getFolder().getFolderGameJar()+"JRE/runtime/bin/java.exe");
+      File f = new File(pathToJava+".exe");
       if(f.exists()){return f.toString();}
     }else if(Os.getOs().isLinux()){
-      File f = new File(getFolder().getFolderGameJar()+"JRE/runtime/bin/java");
+      File f = new File(pathToJava);
       if(f.exists()){return f.toString();}
     }else if(Os.getOs().isMac()){
-      File f = new File(getFolder().getFolderGameJar()+"JRE/runtime/bin/java");
+      File f = new File(pathToJava);
       if(f.exists()){return f.toString();}
     }
     return "java";
