@@ -2,9 +2,9 @@ package fr.formiko.formikolauncher;
 
 import fr.formiko.usual.Folder;
 import fr.formiko.usual.Os;
+import fr.formiko.usual.Progression;
 import fr.formiko.usual.ReadFile;
 import fr.formiko.usual.Version;
-import fr.formiko.usual.Progression;
 import fr.formiko.usual.ecrireUnFichier;
 import fr.formiko.usual.erreur;
 import fr.formiko.usual.fichier;
@@ -14,6 +14,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.ProcessBuilder.Redirect;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -282,28 +284,39 @@ public class Launcher {
   public String getJavaCommand(){
     String pathToJava=getPathToLauncherFiles()+"runtime/bin/java";
     String wantedVersionJRE=ReadFile.readFile(getFolder().getFolderGameJar()+getVersion()+"/JREVersion.md").split("\n")[0];
+    String javaCmd=null;
     if(canUseLauncherJRE(wantedVersionJRE)){
       if(Os.getOs().isWindows()){
         File f = new File(pathToJava+".exe");
-        if(f.exists()){return f.toString();}
+        if(f.exists()){javaCmd=f.toString();}
       }else if(Os.getOs().isLinux()){
         File f = new File(pathToJava);
-        if(f.exists()){return f.toString();}
+        if(f.exists()){javaCmd=f.toString();}
       }else if(Os.getOs().isMac()){
         File f = new File(pathToJava);
-        if(f.exists()){return f.toString();}
+        if(f.exists()){javaCmd=f.toString();}
+      }
+      if(javaCmd!=null && Files.isExecutable(Paths.get(javaCmd))){
+        return javaCmd;
+      }else{
+        erreur.alerte("Can't execute "+javaCmd);
       }
     }
     pathToJava=getFolder().getFolderGameJar()+"JRE/bin/java";
     if(Os.getOs().isWindows()){
       File f = new File(pathToJava+".exe");
-      if(f.exists()){return f.toString();}
+      if(f.exists()){javaCmd=f.toString();}
     }else if(Os.getOs().isLinux()){
       File f = new File(pathToJava);
-      if(f.exists()){return f.toString();}
+      if(f.exists()){javaCmd=f.toString();}
     }else if(Os.getOs().isMac()){
       File f = new File(pathToJava);
-      if(f.exists()){return f.toString();}
+      if(f.exists()){javaCmd=f.toString();}
+    }
+    if(javaCmd!=null && Files.isExecutable(Paths.get(javaCmd))){
+      return javaCmd;
+    }else{
+      erreur.alerte("Can't execute "+javaCmd);
     }
     return "java";
   }
