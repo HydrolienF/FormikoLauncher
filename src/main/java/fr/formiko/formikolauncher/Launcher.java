@@ -237,9 +237,16 @@ public class Launcher {
       // create runtime to execute external command
       ProcessBuilder pb = new ProcessBuilder(Arrays.asList(cmd));
           // .inheritIO();
-      File fout = new File(Folder.getFolder().getFolderTemporary()+"log.txt");
-      if(Main.logToFile && fout.exists()){
-        pb.redirectOutput(Redirect.appendTo(fout));
+      File parentLog = new File(Folder.getFolder().getFolderTemporary());
+      parentLog.mkdirs();
+      if(Main.logToFile && parentLog.exists()){
+        File fout = new File(Folder.getFolder().getFolderTemporary()+"log.txt");
+        try {
+          pb.redirectOutput(Redirect.appendTo(fout));
+        }catch (Exception e) {
+          erreur.alerte("Fail to redirectOutput to log file.");
+          pb.redirectOutput(Redirect.INHERIT);
+        }
       }else{
         pb.redirectOutput(Redirect.INHERIT);
       }
