@@ -213,6 +213,7 @@ public class Launcher {
     if(javaArgs==null || javaArgs.length==0){
       javaArgs=new String[0];
     }
+    args.add("-launchFromLauncher");
     try {
       String[] cmd = new String[3+args.size()+javaArgs.length];
       int k=0;
