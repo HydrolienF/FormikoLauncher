@@ -29,6 +29,7 @@ public class Main {
   public static void main(String[] args) {
     color.iniColor();
     launchGame=true;
+    logToFile=true;
     if(args.length==1 && args[0] != null){ //for maven args
       args = args[0].split(" ");
     }
@@ -109,7 +110,8 @@ public class Main {
           break;
         }
         case "logToFile":{
-          logToFile=true;
+          if(argOfTheArg.length()==0){argOfTheArg="true";}
+          logToFile=Boolean.getBoolean(argOfTheArg);
           break;
         }
 
