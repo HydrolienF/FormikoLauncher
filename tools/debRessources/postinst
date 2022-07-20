@@ -1,5 +1,5 @@
-echo "chmod java"
-chmod 777 ~/.formiko/game/JRE/bin/java
+echo "chmod"
+chmod -R 777 /opt/formiko/
 echo "Create shortcut. You can launch Formiko in cmd line with:"
 echo "formiko"
 sudo ln -s /opt/formiko/bin/Formiko /bin/formiko
