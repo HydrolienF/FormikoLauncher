@@ -16,6 +16,9 @@ null/
 .project
 .settings/
 
+#vscode
+.vscode/
+
 #temp folder/
 in/
 out/
