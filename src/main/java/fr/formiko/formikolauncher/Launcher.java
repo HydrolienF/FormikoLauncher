@@ -243,6 +243,8 @@ public class Launcher {
         File fout = new File(Folder.getFolder().getFolderTemporary()+"log.txt");
         try {
           pb.redirectOutput(Redirect.appendTo(fout));
+          erreur.info("All info, error & alerte are redirected to "+fout.getCanonicalPath());
+          erreur.info("Launch with -logToFile=false to have info, error & alerte in console");
         }catch (Exception e) {
           erreur.alerte("Fail to redirectOutput to log file.");
           pb.redirectOutput(Redirect.INHERIT);
