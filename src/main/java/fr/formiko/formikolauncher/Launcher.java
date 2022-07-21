@@ -331,7 +331,7 @@ public class Launcher {
   }
   /**
   *{@summary Give args to execute java.}<br>
-  *Args are download as ressources & can be find in .../app/jvm.config
+  *Args are download as ressources &#38; can be find in .../app/jvm.config
   *@return args for the JVM
   *@lastEditedVersion 1.0
   */
@@ -370,7 +370,7 @@ public class Launcher {
   }
 
   /**
-  *{@summary This handler will be called on Control-C pressed.
+  *{@summary This handler will be called on Control-C pressed.}
   *cf http://vkroz.github.io/posts/20170630-Java-interrupt-hook.html
   *@lastEditedVersion 0.1
   */
