@@ -241,7 +241,6 @@ jobs:
 
     - name: jlink
       run: |
-        cd ~
         mvn -ntp compile exec:java -Dargs='-logToFile=false downloadAndUnzip https://github.com/HydrolienF/JRE/releases/download/${{ env.JRE_VERSION }}/jlink.zip jlink/ j${{ env.OS }}/'
         ls jlink/
     - name: Pull
