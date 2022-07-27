@@ -238,6 +238,23 @@ public class Launcher {
       // create runtime to execute external command
       ProcessBuilder pb = new ProcessBuilder(Arrays.asList(cmd));
           // .inheritIO();
+      if(Os.getOs().isMac()){
+        String t [] = new String[4];
+        t[0]="bash";
+        t[1]="-l";
+        t[2]="-c";
+        t[3]="\"";
+        for (String s : cmd) {
+          t[3]+=s;
+        }
+        t[3]+="\"";
+        System.out.println("commande launch on mac: ");//@a
+        for (String s : t) {
+          System.out.print(t+" ");
+        }
+        System.out.println();
+        pb = new ProcessBuilder(Arrays.asList(t));
+      }
       File parentLog = new File(Folder.getFolder().getFolderTemporary());
       parentLog.mkdirs();
       if(Main.logToFile && parentLog.exists()){
