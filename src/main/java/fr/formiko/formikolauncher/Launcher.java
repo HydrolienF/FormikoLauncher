@@ -230,11 +230,11 @@ public class Launcher {
         cmd[k++]=arg;
       }
 
-      System.out.println("commande launch: ");//@a
+      erreur.info("commande launch: ");//@a
       for (String s : cmd) {
-        System.out.print(s+" ");//@a
+        erreur.print(s+" ");//@a
       }
-      System.out.println();//@a
+      erreur.println();//@a
       // create runtime to execute external command
       ProcessBuilder pb = new ProcessBuilder(Arrays.asList(cmd));
           // .inheritIO();
@@ -248,11 +248,11 @@ public class Launcher {
           t[3]+=s;
         }
         t[3]+="\"";
-        System.out.println("commande launch on mac: ");//@a
+        erreur.info("commande launch on mac: ");//@a
         for (String s : t) {
-          System.out.print(t+" ");
+          erreur.print(s+" ");
         }
-        System.out.println();
+        erreur.println();
         pb = new ProcessBuilder(Arrays.asList(t));
       }
       File parentLog = new File(Folder.getFolder().getFolderTemporary());
