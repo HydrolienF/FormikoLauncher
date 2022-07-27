@@ -12,6 +12,7 @@ import fr.formiko.usual.structures.listes.GString;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.ProcessBuilder.Redirect;
 import java.nio.file.Files;
@@ -260,6 +261,11 @@ public class Launcher {
         erreur.println();
         pb = new ProcessBuilder(Arrays.asList(t));
       }
+
+      if(Os.getOs().isMac()){
+        pb.directory(new File(System.getProperty("user.home")));
+      }
+      
       File parentLog = new File(Folder.getFolder().getFolderTemporary());
       parentLog.mkdirs();
       if(Main.logToFile && parentLog.exists()){
