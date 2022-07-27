@@ -260,11 +260,11 @@ public class Launcher {
         }
         erreur.println();
         pb = new ProcessBuilder(Arrays.asList(t));
-        // if(Os.getOs().isMac()){
-          pb.directory(new File(System.getProperty("user.home")));
-        // }
       }
 
+      if(Os.getOs().isMac()){
+        pb.directory(new File(System.getProperty("user.home")));
+      }
 
       File parentLog = new File(Folder.getFolder().getFolderTemporary());
       parentLog.mkdirs();
