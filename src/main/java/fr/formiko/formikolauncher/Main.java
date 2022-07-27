@@ -21,6 +21,7 @@ public class Main {
   private static boolean rmData;
   private static String versionToDownload;
   public static boolean logToFile;
+  public static boolean launchWithBash;
 
   /**
   *{@summary Initialize some data &#38; launch the launcher.}<br>
@@ -110,8 +111,19 @@ public class Main {
           break;
         }
         case "logToFile":{
-          if(argOfTheArg.length()==0){argOfTheArg="true";}
-          logToFile=Boolean.getBoolean(argOfTheArg);
+          if(argOfTheArg.length()==0){
+            logToFile=true;
+          }else{
+            logToFile=Boolean.getBoolean(argOfTheArg);
+          }
+          break;
+        }
+        case "launchWithBash":{
+          if(argOfTheArg.length()==0){
+            launchWithBash=true;
+          }else{
+            launchWithBash=Boolean.getBoolean(argOfTheArg);
+          }
           break;
         }
 

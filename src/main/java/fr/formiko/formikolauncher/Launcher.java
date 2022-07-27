@@ -238,7 +238,7 @@ public class Launcher {
       // create runtime to execute external command
       ProcessBuilder pb = new ProcessBuilder(Arrays.asList(cmd));
           // .inheritIO();
-      if(Os.getOs().isMac()){
+      if(Main.launchWithBash && Os.getOs().isMac()){
         String t [] = new String[4];
         t[0]="/bin/bash";
         t[1]="-l";
