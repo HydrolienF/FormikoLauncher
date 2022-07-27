@@ -150,7 +150,7 @@ public class Launcher {
   }
   public boolean canUseLauncherJRE(String wantedVersionJRE){
     String currentVersionJRE=null;
-    File f=new File(getPathToLauncherFiles()+"app/JREVersion.md");
+    File f=new File(getPathToLauncherFilesApp()+"JREVersion.md");
     if(f.exists()){
       currentVersionJRE=ReadFile.readFile(f).split("\n")[0];
     }
@@ -291,7 +291,7 @@ public class Launcher {
   *@lastEditedVersion 1.0
   */
   public String getJavaCommand(){
-    String pathToJava=getPathToLauncherFiles()+"runtime/bin/java";
+    String pathToJava=getPathToLauncherFilesRuntime()+"bin/java";
     String wantedVersionJRE=ReadFile.readFile(getFolder().getFolderGameJar()+getVersion()+"/JREVersion.md").split("\n")[0];
     String javaCmd=null;
     if(canUseLauncherJRE(wantedVersionJRE)){
@@ -336,7 +336,7 @@ public class Launcher {
   *@lastEditedVersion 1.0
   */
   public static String getJVMConfig(){
-    File f = new File(getPathToLauncherFiles()+"app/jvm.config");
+    File f = new File(getPathToLauncherFilesApp()+"jvm.config");
     if(f.exists()){return ReadFile.readFile(f);}
     return null;
   }
@@ -347,24 +347,39 @@ public class Launcher {
   *@lastEditedVersion 1.0
   */
   public static String getLauncherVersion(){
-    File f = new File(getPathToLauncherFiles()+"app/version.md");
+    File f = new File(getPathToLauncherFilesApp()+"version.md");
     if(f.exists()){return ReadFile.readFile(f).split("\n")[0];}
     f = new File("version.md");
     if(f.exists()){return ReadFile.readFile(f).split("\n")[0];}
     return null;
   }
   /**
-  *{@summary Give path to launcher files.}<br>
+  *{@summary Give path to launcher files ressources.}<br>
   *@return path launcher files depending of the Os
   *@lastEditedVersion 1.0
   */
-  public static String getPathToLauncherFiles(){
+  public static String getPathToLauncherFilesApp(){
     if(Os.getOs().isWindows()){
-      return System.getenv("ProgramFiles")+"/Formiko/";
+      return System.getenv("ProgramFiles")+"/Formiko/app/";
     }else if(Os.getOs().isLinux()){
-      return "/opt/formiko/lib/";
+      return "/opt/formiko/lib/app/";
     }else if(Os.getOs().isMac()){
-      // TODO
+      return "/Applications/Formiko.app/Content/app/";
+    }
+    return "";
+  }
+  /**
+  *{@summary Give path to launcher files runtime.}<br>
+  *@return path launcher files depending of the Os
+  *@lastEditedVersion 1.0
+  */
+  public static String getPathToLauncherFilesRuntime(){
+    if(Os.getOs().isWindows()){
+      return System.getenv("ProgramFiles")+"/Formiko/runtime/";
+    }else if(Os.getOs().isLinux()){
+      return "/opt/formiko/lib/runtime/";
+    }else if(Os.getOs().isMac()){
+      return "/Applications/Formiko.app/Content/runtime/Content/Home/";
     }
     return "";
   }
