@@ -379,7 +379,7 @@ public class Launcher {
     }else if(Os.getOs().isLinux()){
       return "/opt/formiko/lib/runtime/";
     }else if(Os.getOs().isMac()){
-      return "/Applications/Formiko.app/Content/runtime/Content/Home/";
+      return "/Applications/Formiko.app/Contents/runtime/Contents/Home/";
     }
     return "";
   }
