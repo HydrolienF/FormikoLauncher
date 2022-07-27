@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.ProcessBuilder.Redirect;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
@@ -305,7 +306,7 @@ public class Launcher {
         File f = new File(pathToJava);
         if(f.exists()){javaCmd=f.toString();}
       }
-      if(javaCmd!=null && Files.isExecutable(Paths.get(javaCmd))){
+      if(javaCmd!=null && makeExecutable(Paths.get(javaCmd))){
         return javaCmd;
       }else{
         erreur.alerte("Can't execute "+javaCmd);
@@ -322,7 +323,7 @@ public class Launcher {
       File f = new File(pathToJava);
       if(f.exists()){javaCmd=f.toString();}
     }
-    if(javaCmd!=null && Files.isExecutable(Paths.get(javaCmd))){
+    if(javaCmd!=null && makeExecutable(Paths.get(javaCmd))){
       return javaCmd;
     }else{
       erreur.alerte("Can't execute "+javaCmd);
@@ -382,6 +383,15 @@ public class Launcher {
       return "/Applications/Formiko.app/Contents/runtime/Contents/Home/";
     }
     return "";
+  }
+  /**
+  *{@summary Try to make a file executable.}
+  *@lastEditedVersion 1.0
+  */
+  private boolean makeExecutable(Path path){
+    if(Files.isExecutable(path)){return true;}
+    fichier.setMaxPermRecursively(new File(path.toString()));
+    return Files.isExecutable(path);
   }
 
   /**
