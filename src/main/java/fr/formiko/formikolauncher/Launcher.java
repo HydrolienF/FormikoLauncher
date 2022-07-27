@@ -244,7 +244,12 @@ public class Launcher {
         t[1]="-l";
         t[2]="-c";
         t[3]="\"";
+        boolean first=true;
         for (String s : cmd) {
+          if(!first){
+            t[3]+=" ";
+            first=false;
+          }
           t[3]+=s;
         }
         t[3]+="\"";
