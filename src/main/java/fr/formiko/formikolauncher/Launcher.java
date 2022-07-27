@@ -240,7 +240,7 @@ public class Launcher {
           // .inheritIO();
       if(Os.getOs().isMac()){
         String t [] = new String[4];
-        t[0]="bash";
+        t[0]="/bin/bash";
         t[1]="-l";
         t[2]="-c";
         t[3]="\"";
