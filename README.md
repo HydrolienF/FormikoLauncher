@@ -1,3 +1,7 @@
+[download]: https://formiko.fr/download.html
+[codeQuality]: https://api.codiga.io/project/34654/score/svg
+[ ![codeQuality][] ][download]
+
 # FormikoLauncher
 
 This is the launcher for [Formiko](https://github.com/HydrolienF/Formiko).
